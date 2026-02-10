@@ -13,6 +13,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* Pages */
 .page {
   display: none;
   min-height: 100vh;
@@ -24,6 +25,7 @@ body {
   display: block;
 }
 
+/* UI */
 input {
   padding: 12px;
   width: 260px;
@@ -51,11 +53,19 @@ button {
   border-radius: 8px;
 }
 
-iframe {
+/* FULLSCREEN OVERLAY */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: none;
+}
+
+#overlay iframe {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   border: none;
-  background: black;
 }
 </style>
 </head>
@@ -78,37 +88,31 @@ iframe {
   <div class="ext">
     <strong>aioyumi</strong><br>
     <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
-    <button onclick="openEmbed('https://asurascans.com/')">Embedded</button>
   </div>
 
   <div class="ext">
     <strong>lumini</strong><br>
     <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
-    <button onclick="openEmbed('https://writersscans.com/')">Embedded</button>
   </div>
 
   <div class="ext">
     <strong>aeriya</strong><br>
     <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
-    <button onclick="openEmbed('https://ezmanga.org/')">Embedded</button>
   </div>
 
   <div class="ext">
     <strong>sorya</strong><br>
     <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
-    <button onclick="openEmbed('https://comix.to/')">Embedded</button>
   </div>
 
   <div class="ext">
     <strong>keiyoushi</strong><br>
     <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
-    <button onclick="openEmbed('https://sirencomics.com/')">Embedded</button>
   </div>
 </div>
 
-<!-- READER -->
-<div id="readerPage" class="page">
-  <button onclick="showPage('extensions')">← Back</button>
+<!-- FULLSCREEN OVERLAY -->
+<div id="overlay">
   <iframe id="reader"></iframe>
 </div>
 
@@ -123,15 +127,24 @@ function login() {
   showPage("extensions");
 }
 
-function openEmbed(url) {
-  document.getElementById("reader").src = url;
-  showPage("readerPage");
+function openFullscreen(url) {
+  const overlay = document.getElementById("overlay");
+  const reader = document.getElementById("reader");
+
+  reader.src = url;
+  overlay.style.display = "block";
 }
 
-function openFullscreen(url) {
-  // Same tab, true fullscreen possible
-  window.location.href = url;
-}
+/* ESC to exit fullscreen overlay */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const overlay = document.getElementById("overlay");
+    const reader = document.getElementById("reader");
+
+    overlay.style.display = "none";
+    reader.src = "";
+  }
+});
 
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p =>
