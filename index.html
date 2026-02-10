@@ -106,9 +106,23 @@
     font-size: 0.85rem;
     opacity: 0.6;
   }
+  #launch-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    z-index: 9999;
+  }
+
 </style>
 </head>
 <body>
+
+<div id="launch-overlay" class="hidden">Launching reader…</div>
 
 <div id="login-container">
   <h1>Welcome to Manhyo Reader</h1>
@@ -164,6 +178,7 @@ Manhyo Reader • Minimal • Fast • Dark</footer>
   updateDynamicText();
 
   const extensions = [
+    // fullscreen disabled for all (faster launch)
     {name: "AsuraScans", url: "https://asurascans.com/"},
     {name: "Comix.to", url: "https://comix.to/"},
     {name: "EZManga.org", url: "https://ezmanga.org/"},
@@ -194,11 +209,12 @@ Manhyo Reader • Minimal • Fast • Dark</footer>
   }
 
   function launchExtension(url) {
-    // Best-effort fullscreen (must be user gesture)
-    try {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      }
+    const overlay = document.getElementById("launch-overlay");
+    overlay.classList.remove("hidden");
+
+    // Immediate navigation = fastest possible
+    window.location.href = url;
+  }
     } catch (e) {}
 
     // Navigate in SAME TAB (Scenario A)
