@@ -12,11 +12,11 @@
     color: #ffffff;
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 40px;
+    padding: 30px;
   }
 
   h1 {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   input {
@@ -28,9 +28,9 @@
   }
 
   button {
-    margin-top: 15px;
-    padding: 12px 22px;
-    font-size: 16px;
+    padding: 10px 16px;
+    margin: 6px;
+    font-size: 14px;
     font-weight: bold;
     border: none;
     border-radius: 6px;
@@ -39,20 +39,24 @@
     color: #fff;
   }
 
-  button:hover {
-    opacity: 0.9;
+  .ext {
+    margin-top: 15px;
+    padding: 12px;
+    background: #1e1e1e;
+    border-radius: 8px;
   }
 
   #extensions {
-    margin-top: 30px;
     display: none;
+    margin-top: 25px;
   }
 
-  .ext-btn {
-    display: block;
-    margin: 10px auto;
-    width: 260px;
-    background: #1e1e1e;
+  iframe {
+    width: 100%;
+    height: 45vh;
+    border: none;
+    margin-top: 25px;
+    background: black;
   }
 </style>
 </head>
@@ -66,45 +70,62 @@
 <br>
 <button onclick="login()">Enter</button>
 
-<div id="extensions">
-  <h2>Extensions</h2>
-</div>
+<div id="extensions"></div>
+
+<iframe id="reader" style="display:none;"></iframe>
 
 <script>
-  const PASSWORD = "D3r5t0n3";
+const PASSWORD = "D3r5t0n3";
+let refreshInterval = null;
 
-  const extensions = [
-    { name: "AsuraScans", url: "https://asurascans.com/" },
-    { name: "Comix.to", url: "https://comix.to/" },
-    { name: "EZManga", url: "https://ezmanga.org/" },
-    { name: "Webtoons", url: "https://www.webtoons.com/" },
-    { name: "Sirens Scans", url: "https://sirencomics.com/" },
-    { name: "Writers Scans", url: "https://writersscans.com/" }
-  ];
+const extensions = [
+  { name: "AsuraScans", url: "https://asurascans.com/" },
+  { name: "Comix.to", url: "https://comix.to/" },
+  { name: "EZManga", url: "https://ezmanga.org/" },
+  { name: "Sirens Scans", url: "https://sirencomics.com/" },
+  { name: "Writers Scans", url: "https://writersscans.com/" }
+];
 
-  function login() {
-    const input = document.getElementById("password").value;
-    if (input !== PASSWORD) {
-      alert("Wrong password");
-      return;
-    }
-
-    const container = document.getElementById("extensions");
-    container.style.display = "block";
-
-    extensions.forEach(ext => {
-      const btn = document.createElement("button");
-      btn.className = "ext-btn";
-      btn.textContent = ext.name;
-      btn.onclick = () => window.location.href = ext.url;
-      container.appendChild(btn);
-    });
+function login() {
+  if (document.getElementById("password").value !== PASSWORD) {
+    alert("Wrong password");
+    return;
   }
+
+  const container = document.getElementById("extensions");
+  container.style.display = "block";
+  container.innerHTML = "<h2>Extensions</h2>";
+
+  extensions.forEach(ext => {
+    const div = document.createElement("div");
+    div.className = "ext";
+
+    div.innerHTML = `
+      <strong>${ext.name}</strong><br>
+      <button onclick="openFullscreen('${ext.url}')">Fullscreen</button>
+      <button onclick="openBottom('${ext.url}')">Bottom</button>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function openFullscreen(url) {
+  clearInterval(refreshInterval);
+  window.location.href = url;
+}
+
+function openBottom(url) {
+  const iframe = document.getElementById("reader");
+  iframe.style.display = "block";
+  iframe.src = url;
+
+  clearInterval(refreshInterval);
+  refreshInterval = setInterval(() => {
+    iframe.src = url;
+  }, 3000);
+}
 </script>
 
 </body>
 </html>
-
-
-
-
