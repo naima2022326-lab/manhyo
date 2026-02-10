@@ -6,124 +6,138 @@
 <title>Manhyo Reader</title>
 
 <style>
-  body {
-    margin: 0;
-    background: #0b0b0b;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 30px;
-  }
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
 
-  h1 {
-    margin-bottom: 5px;
-  }
+.page {
+  display: none;
+  min-height: 100vh;
+  padding: 40px;
+  text-align: center;
+}
 
-  input {
-    padding: 12px;
-    width: 260px;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-  }
+.page.active {
+  display: block;
+}
 
-  button {
-    padding: 10px 16px;
-    margin: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background: #2196f3;
-    color: #fff;
-  }
+input {
+  padding: 12px;
+  width: 260px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
 
-  .ext {
-    margin-top: 15px;
-    padding: 12px;
-    background: #1e1e1e;
-    border-radius: 8px;
-  }
+button {
+  padding: 12px 20px;
+  margin: 8px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #2196f3;
+  color: white;
+}
 
-  #extensions {
-    display: none;
-    margin-top: 25px;
-  }
+.ext {
+  background: #1e1e1e;
+  margin: 15px auto;
+  padding: 15px;
+  max-width: 420px;
+  border-radius: 8px;
+}
 
-  iframe {
-    width: 100%;
-    height: 45vh;
-    border: none;
-    margin-top: 25px;
-    background: black;
-  }
+iframe {
+  width: 100%;
+  height: 100vh;
+  border: none;
+  background: black;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Manhyo Reader</h1>
-<p>Enter access key</p>
+<!-- LOGIN -->
+<div id="login" class="page active">
+  <h1>Manhyo Reader</h1>
+  <p>Enter access key</p>
+  <input type="password" id="password" placeholder="Password">
+  <br><br>
+  <button onclick="login()">Enter</button>
+</div>
 
-<input type="password" id="password" placeholder="Password">
-<br>
-<button onclick="login()">Enter</button>
+<!-- EXTENSIONS -->
+<div id="extensions" class="page">
+  <h1>Extensions</h1>
 
-<div id="extensions"></div>
+  <div class="ext">
+    <strong>aioyumi</strong><br>
+    <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
+    <button onclick="openEmbed('https://asurascans.com/')">Embedded</button>
+  </div>
 
-<iframe id="reader" style="display:none;"></iframe>
+  <div class="ext">
+    <strong>lumini</strong><br>
+    <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
+    <button onclick="openEmbed('https://writersscans.com/')">Embedded</button>
+  </div>
+
+  <div class="ext">
+    <strong>aeriya</strong><br>
+    <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
+    <button onclick="openEmbed('https://ezmanga.org/')">Embedded</button>
+  </div>
+
+  <div class="ext">
+    <strong>sorya</strong><br>
+    <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
+    <button onclick="openEmbed('https://comix.to/')">Embedded</button>
+  </div>
+
+  <div class="ext">
+    <strong>keiyoushi</strong><br>
+    <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
+    <button onclick="openEmbed('https://sirencomics.com/')">Embedded</button>
+  </div>
+</div>
+
+<!-- READER -->
+<div id="readerPage" class="page">
+  <button onclick="showPage('extensions')">← Back</button>
+  <iframe id="reader"></iframe>
+</div>
 
 <script>
 const PASSWORD = "D3r5t0n3";
-let refreshInterval = null;
-
-const extensions = [
-  { name: "AsuraScans", url: "https://asurascans.com/" },
-  { name: "Comix.to", url: "https://comix.to/" },
-  { name: "EZManga", url: "https://ezmanga.org/" },
-  { name: "Sirens Scans", url: "https://sirencomics.com/" },
-  { name: "Writers Scans", url: "https://writersscans.com/" }
-];
 
 function login() {
   if (document.getElementById("password").value !== PASSWORD) {
     alert("Wrong password");
     return;
   }
+  showPage("extensions");
+}
 
-  const container = document.getElementById("extensions");
-  container.style.display = "block";
-  container.innerHTML = "<h2>Extensions</h2>";
-
-  extensions.forEach(ext => {
-    const div = document.createElement("div");
-    div.className = "ext";
-
-    div.innerHTML = `
-      <strong>${ext.name}</strong><br>
-      <button onclick="openFullscreen('${ext.url}')">Fullscreen</button>
-      <button onclick="openBottom('${ext.url}')">Bottom</button>
-    `;
-
-    container.appendChild(div);
-  });
+function openEmbed(url) {
+  document.getElementById("reader").src = url;
+  showPage("readerPage");
 }
 
 function openFullscreen(url) {
-  clearInterval(refreshInterval);
+  // Same tab, true fullscreen possible
   window.location.href = url;
 }
 
-function openBottom(url) {
-  const iframe = document.getElementById("reader");
-  iframe.style.display = "block";
-  iframe.src = url;
-
-  clearInterval(refreshInterval);
-  refreshInterval = setInterval(() => {
-    iframe.src = url;
-  }, 3000);
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p =>
+    p.classList.remove("active")
+  );
+  document.getElementById(id).classList.add("active");
 }
 </script>
 
