@@ -2,70 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
   background: #0b0b0b;
   color: #fff;
-  font-family: Arial, sans-serif;
 }
 
-/* Pages */
-.page {
-  display: none;
-  min-height: 100vh;
-  padding: 40px;
-  text-align: center;
+/* ---------- LOGIN ---------- */
+#login {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.page.active {
-  display: block;
-}
-
-/* UI */
 input {
   padding: 12px;
   width: 260px;
   border-radius: 6px;
   border: none;
-  font-size: 16px;
+  margin-top: 12px;
 }
 
 button {
+  margin-top: 12px;
   padding: 12px 20px;
-  margin: 8px;
-  font-weight: bold;
   border: none;
   border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  background: #2196f3;
+  background: linear-gradient(135deg, #2196f3, #21cbf3);
   color: white;
 }
 
-.ext {
-  background: #1e1e1e;
-  margin: 15px auto;
-  padding: 15px;
-  max-width: 420px;
-  border-radius: 8px;
+/* ---------- MAIN ---------- */
+#main {
+  display: none;
+  padding: 1rem;
 }
 
-/* FULLSCREEN OVERLAY */
+#extensions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.ext-btn {
+  background: #1e1e1e;
+  border: 1px solid #2b2b2b;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ---------- READER ---------- */
+#reader-container {
+  position: relative;
+  height: 70vh;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: black;
+  border-radius: 10px;
+}
+
+#fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+}
+
+/* ---------- FULLSCREEN OVERLAY ---------- */
 #overlay {
   position: fixed;
   inset: 0;
-  background: #000;
-  z-index: 9999;
+  background: black;
   display: none;
+  z-index: 9999;
 }
 
 #overlay iframe {
   width: 100%;
   height: 100%;
-  border: none;
 }
 </style>
 </head>
@@ -73,85 +107,101 @@ button {
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="page active">
+<div id="login">
   <h1>Manhyo Reader</h1>
   <p>Enter access key</p>
   <input type="password" id="password" placeholder="Password">
-  <br><br>
   <button onclick="login()">Enter</button>
 </div>
 
-<!-- EXTENSIONS -->
-<div id="extensions" class="page">
-  <h1>Extensions</h1>
+<!-- MAIN -->
+<div id="main">
+  <h2>Extensions</h2>
 
-  <div class="ext">
-    <strong>aioyumi</strong><br>
-    <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
-  </div>
+  <div id="extensions"></div>
 
-  <div class="ext">
-    <strong>lumini</strong><br>
-    <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>aeriya</strong><br>
-    <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>sorya</strong><br>
-    <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>keiyoushi</strong><br>
-    <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
+  <div id="reader-container">
+    <button id="fullscreen-btn" onclick="fullscreen()">Fullscreen</button>
+    <iframe id="reader"></iframe>
   </div>
 </div>
 
-<!-- FULLSCREEN OVERLAY -->
+<!-- FULLSCREEN -->
 <div id="overlay">
-  <iframe id="reader"></iframe>
+  <iframe id="overlay-reader"></iframe>
 </div>
 
 <script>
+/* ---------- CONFIG ---------- */
 const PASSWORD = "D3r5t0n3";
+let refreshTimer = null;
 
+const extensions = [
+  { name: "aioyumi", url: "https://asurascans.com" },
+  { name: "lumini", url: "https://writerscans.com" },
+  { name: "aeriya", url: "https://ezmanga.org" },
+  { name: "sorya", url: "https://comix.to" },
+  { name: "keiyoushi", url: "https://sirensscans.com" }
+];
+
+/* ---------- LOGIN ---------- */
 function login() {
-  if (document.getElementById("password").value !== PASSWORD) {
+  if (document.getElementById("password").value === PASSWORD) {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("main").style.display = "block";
+    loadExtensions();
+  } else {
     alert("Wrong password");
-    return;
   }
-  showPage("extensions");
 }
 
-function openFullscreen(url) {
+/* ---------- EXTENSIONS ---------- */
+function loadExtensions() {
+  const box = document.getElementById("extensions");
+  box.innerHTML = "";
+
+  extensions.forEach(ext => {
+    const btn = document.createElement("div");
+    btn.className = "ext-btn";
+    btn.textContent = ext.name;
+    btn.onclick = () => openReader(ext.url);
+    box.appendChild(btn);
+  });
+}
+
+function openReader(url) {
+  const reader = document.getElementById("reader");
+  reader.src = url;
+
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    reader.src = reader.src;
+  }, 3000);
+}
+
+/* ---------- FULLSCREEN ---------- */
+function fullscreen() {
   const overlay = document.getElementById("overlay");
+  const overlayReader = document.getElementById("overlay-reader");
   const reader = document.getElementById("reader");
 
-  reader.src = url;
   overlay.style.display = "block";
+  overlayReader.src = reader.src;
+
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    overlayReader.src = overlayReader.src;
+  }, 3000);
 }
 
-/* ESC to exit fullscreen overlay */
-document.addEventListener("keydown", (e) => {
+/* ---------- ESC EXIT ---------- */
+document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
-    const overlay = document.getElementById("overlay");
-    const reader = document.getElementById("reader");
-
-    overlay.style.display = "none";
-    reader.src = "";
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("overlay-reader").src = "";
+    clearInterval(refreshTimer);
   }
 });
-
-function showPage(id) {
-  document.querySelectorAll(".page").forEach(p =>
-    p.classList.remove("active")
-  );
-  document.getElementById(id).classList.add("active");
-}
 </script>
 
 </body>
