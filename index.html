@@ -1,0 +1,30 @@
+<div id="extension-frame-container">
+  <iframe id="extension-frame"></iframe>
+  <button id="fullscreen-btn" style="display:none;">Fullscreen</button>
+</div>
+
+<script>
+function openExtension(url) {
+  const frame = document.getElementById("extension-frame");
+  const btn = document.getElementById("fullscreen-btn");
+  
+  frame.src = url;
+  frame.style.display = "block"; // show iframe normally
+  frame.classList.remove("fullscreen-frame");
+  
+  btn.style.display = "inline-block"; // show fullscreen button
+  
+  btn.onclick = () => {
+    frame.classList.add("fullscreen-frame"); // go fullscreen
+  };
+
+  // Press ESC to exit fullscreen
+  document.addEventListener("keydown", function escHandler(e) {
+    if(e.key === "Escape") {
+      frame.classList.remove("fullscreen-frame");
+      btn.style.display = "inline-block"; // keep button visible
+      document.removeEventListener("keydown", escHandler);
+    }
+  });
+}
+</script>
