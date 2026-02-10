@@ -87,27 +87,32 @@ button {
 
   <div class="ext">
     <strong>aioyumi</strong><br>
-    <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
+    <button onclick="openIframe('https://asurascans.com/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>lumini</strong><br>
-    <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
+    <button onclick="openIframe('https://writersscans.com/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>aeriya</strong><br>
-    <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
+    <button onclick="openIframe('https://ezmanga.org/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>sorya</strong><br>
-    <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
+    <button onclick="openIframe('https://comix.to/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>keiyoushi</strong><br>
-    <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
+    <button onclick="openIframe('https://sirencomics.com/')">Fullscreen</button>
+  </div>
+
+  <div class="ext">
+    <strong>lemon8</strong><br>
+    <button onclick="openLemon8()">Fullscreen</button>
   </div>
 </div>
 
@@ -118,6 +123,8 @@ button {
 
 <script>
 const PASSWORD = "D3r5t0n3";
+let refreshTimer = null;
+const LEMON8_REFRESH = 120000; // 2 minutes
 
 function login() {
   if (document.getElementById("password").value !== PASSWORD) {
@@ -127,7 +134,10 @@ function login() {
   showPage("extensions");
 }
 
-function openFullscreen(url) {
+/* ---------- IFRAME EXTENSIONS ---------- */
+function openIframe(url) {
+  clearInterval(refreshTimer);
+
   const overlay = document.getElementById("overlay");
   const reader = document.getElementById("reader");
 
@@ -135,9 +145,22 @@ function openFullscreen(url) {
   overlay.style.display = "block";
 }
 
-/* ESC to exit fullscreen overlay */
+/* ---------- LEMON8 / TIKTOK ---------- */
+function openLemon8() {
+  clearInterval(refreshTimer);
+
+  refreshTimer = setInterval(() => {
+    location.reload();
+  }, LEMON8_REFRESH);
+
+  window.location.href = "https://www.tiktok.com/";
+}
+
+/* ---------- ESC HANDLER ---------- */
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
+    clearInterval(refreshTimer);
+
     const overlay = document.getElementById("overlay");
     const reader = document.getElementById("reader");
 
@@ -146,6 +169,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+/* ---------- PAGE SWITCH ---------- */
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p =>
     p.classList.remove("active")
@@ -156,3 +180,4 @@ function showPage(id) {
 
 </body>
 </html>
+
