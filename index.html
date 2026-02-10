@@ -25,7 +25,7 @@ body {
   display: block;
 }
 
-/* Inputs & buttons */
+/* UI */
 input {
   padding: 12px;
   width: 260px;
@@ -45,7 +45,6 @@ button {
   color: white;
 }
 
-/* Extension cards */
 .ext {
   background: #1e1e1e;
   margin: 15px auto;
@@ -54,23 +53,19 @@ button {
   border-radius: 8px;
 }
 
-/* Reader */
-#readerPage {
-  padding: 0;
-}
-
-#reader {
-  width: 100%;
-  height: 100vh;
-  border: none;
-  background: black;
-}
-
-#controls {
+/* FULLSCREEN OVERLAY */
+#overlay {
   position: fixed;
-  top: 10px;
-  right: 10px;
+  inset: 0;
+  background: #000;
   z-index: 9999;
+  display: none;
+}
+
+#overlay iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 </style>
 </head>
@@ -92,42 +87,37 @@ button {
 
   <div class="ext">
     <strong>aioyumi</strong><br>
-    <button onclick="openReader('https://asurascans.com/')">Open</button>
+    <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>lumini</strong><br>
-    <button onclick="openReader('https://writersscans.com/')">Open</button>
+    <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>aeriya</strong><br>
-    <button onclick="openReader('https://ezmanga.org/')">Open</button>
+    <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>sorya</strong><br>
-    <button onclick="openReader('https://comix.to/')">Open</button>
+    <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
   </div>
 
   <div class="ext">
     <strong>keiyoushi</strong><br>
-    <button onclick="openReader('https://sirencomics.com/')">Open</button>
+    <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
   </div>
 </div>
 
-<!-- READER PAGE -->
-<div id="readerPage" class="page">
-  <div id="controls">
-    <button id="fsBtn" onclick="goFullscreen()">Fullscreen</button>
-  </div>
-  <iframe id="reader" allowfullscreen></iframe>
+<!-- FULLSCREEN OVERLAY -->
+<div id="overlay">
+  <iframe id="reader"></iframe>
 </div>
 
 <script>
 const PASSWORD = "D3r5t0n3";
-const fsBtn = document.getElementById("fsBtn");
-const reader = document.getElementById("reader");
 
 function login() {
   if (document.getElementById("password").value !== PASSWORD) {
@@ -137,26 +127,32 @@ function login() {
   showPage("extensions");
 }
 
-function openReader(url) {
+function openFullscreen(url) {
+  const overlay = document.getElementById("overlay");
+  const reader = document.getElementById("reader");
+
   reader.src = url;
-  fsBtn.style.display = "inline-block"; // reset button
-  showPage("readerPage");
+  overlay.style.display = "block";
 }
 
-function goFullscreen() {
-  if (reader.requestFullscreen) {
-    reader.requestFullscreen();
-  } else if (reader.webkitRequestFullscreen) {
-    reader.webkitRequestFullscreen();
-  }
-  fsBtn.style.display = "none"; // hide after use
-}
+/* ESC to exit fullscreen overlay */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const overlay = document.getElementById("overlay");
+    const reader = document.getElementById("reader");
 
-document.addEventListener("fullscreenchange", () => {
-  if (!document.fullscreenElement) {
-    // ESC pressed → return to extensions
-    showPage("extensions");
+    overlay.style.display = "none";
+    reader.src = "";
   }
 });
 
-fun
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p =>
+    p.classList.remove("active")
+  );
+  document.getElementById(id).classList.add("active");
+}
+</script>
+
+</body>
+</html>
