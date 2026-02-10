@@ -1,52 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
-  * { box-sizing: border-box; }
-
   body {
     margin: 0;
-    font-family: 'Space Grotesk', sans-serif;
-    background: radial-gradient(circle at top, #1b1b1b, #0b0b0b);
-    color: #fff;
+    background: #0b0b0b;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
     text-align: center;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hidden { display: none; }
-
-  #login-container, #main-container {
-    width: 100%;
-    max-width: 950px;
-    padding: 2rem;
+    padding: 40px;
   }
 
   h1 {
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
+    margin-bottom: 10px;
   }
 
   input {
     padding: 12px;
-    font-size: 1rem;
-    width: min(320px, 90%);
-    margin-top: 1rem;
+    width: 260px;
     border-radius: 6px;
     border: none;
-    outline: none;
+    font-size: 16px;
   }
 
   button {
+    margin-top: 15px;
     padding: 12px 22px;
-    margin-top: 1rem;
-    font-size: 1rem;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #2196f3;
+    color: #fff;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  #extensions {
+    margin-top: 30px;
+    display: none;
+  }
+
+  .ext-btn {
+    display: block;
+    margin: 10px auto;
+    width: 260px;
+    background: #1e1e1e;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Manhyo Reader</h1>
+<p>Enter access key</p>
+
+<input type="password" id="password" placeholder="Password">
+<br>
+<button onclick="login()">Enter</button>
+
+<div id="extensions">
+  <h2>Extensions</h2>
+</div>
+
+<script>
+  const PASSWORD = "D3r5t0n3";
+
+  const extensions = [
+    { name: "AsuraScans", url: "https://asurascans.com/" },
+    { name: "Comix.to", url: "https://comix.to/" },
+    { name: "EZManga", url: "https://ezmanga.org/" },
+    { name: "Webtoons", url: "https://www.webtoons.com/" },
+    { name: "Sirens Scans", url: "https://sirencomics.com/" },
+    { name: "Writers Scans", url: "https://writersscans.com/" }
+  ];
+
+  function login() {
+    const input = document.getElementById("password").value;
+    if (input !== PASSWORD) {
+      alert("Wrong password");
+      return;
+    }
+
+    const container = document.getElementById("extensions");
+    container.style.display = "block";
+
+    extensions.forEach(ext => {
+      const btn = document.createElement("button");
+      btn.className = "ext-btn";
+      btn.textContent = ext.name;
+      btn.onclick = () => window.location.href = ext.url;
+      container.appendChild(btn);
+    });
+  }
+</script>
+
+</body>
+</html>
+
+
+
 
