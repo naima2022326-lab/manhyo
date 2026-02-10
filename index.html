@@ -4,100 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
-<style>
-/* Base Styles */
-body {
-  margin: 0;
-  background: #0b0b0b;
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* Pages */
-.page {
-  display: none;
-  max-width: 480px;
-  width: 90%;
-  padding: 40px 20px;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.page.active {
-  display: block;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-/* Inputs & Buttons */
-input {
-  padding: 12px;
-  width: 100%;
-  border-radius: 6px;
-  border: none;
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-button {
-  padding: 12px 20px;
-  margin-top: 15px;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #2196f3;
-  color: #fff;
-  transition: background 0.2s;
-}
-
-button:hover {
-  background: #0b7dda;
-}
-
-/* Extension cards */
-.ext {
-  background: #1e1e1e;
-  margin: 15px auto;
-  padding: 15px;
-  border-radius: 8px;
-  max-width: 100%;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-
-/* FULLSCREEN OVERLAY */
-#overlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 9999;
-  display: none;
-}
-
-#overlay iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-/* Heading */
-h1 {
-  margin-bottom: 10px;
-  font-size: 2em;
-}
-p {
-  margin-top: 0;
-  font-size: 1em;
-}
-</style>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
@@ -112,75 +19,16 @@ p {
 <!-- EXTENSIONS PAGE -->
 <div id="extensions" class="page">
   <h1>Extensions</h1>
-
-  <div class="ext">
-    <strong>aioyumi</strong><br>
-    <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>lumini</strong><br>
-    <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>aeriya</strong><br>
-    <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>sorya</strong><br>
-    <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
-  </div>
-
-  <div class="ext">
-    <strong>keiyoushi</strong><br>
-    <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
-  </div>
+  <div class="ext"><strong>aioyumi</strong><br><button data-url="https://asurascans.com/">Fullscreen</button></div>
+  <div class="ext"><strong>lumini</strong><br><button data-url="https://writersscans.com/">Fullscreen</button></div>
+  <div class="ext"><strong>aeriya</strong><br><button data-url="https://ezmanga.org/">Fullscreen</button></div>
+  <div class="ext"><strong>sorya</strong><br><button data-url="https://comix.to/">Fullscreen</button></div>
+  <div class="ext"><strong>keiyoushi</strong><br><button data-url="https://sirencomics.com/">Fullscreen</button></div>
 </div>
 
 <!-- FULLSCREEN OVERLAY -->
-<div id="overlay">
-  <iframe id="reader" title="Reader"></iframe>
-</div>
+<div id="overlay"><iframe id="reader" title="Reader"></iframe></div>
 
-<script>
-// Config
-const PASSWORD = "D3r5t0n3";
-
-// Login logic
-document.getElementById('loginBtn').addEventListener('click', () => {
-  const input = document.getElementById("password").value;
-  if (input === PASSWORD) {
-    showPage("extensions");
-  } else {
-    alert("Wrong password");
-  }
-});
-
-// Show page helper
-function showPage(id) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-// Open fullscreen overlay
-function openFullscreen(url) {
-  const overlay = document.getElementById("overlay");
-  const reader = document.getElementById("reader");
-  reader.src = url;
-  overlay.style.display = "block";
-}
-
-// Close overlay with ESC
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    const overlay = document.getElementById("overlay");
-    const reader = document.getElementById("reader");
-    overlay.style.display = "none";
-    reader.src = "";
-  }
-});
-</script>
+<script src="/main.js"></script>
 </body>
 </html>
