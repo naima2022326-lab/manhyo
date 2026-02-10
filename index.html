@@ -5,47 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
 body {
   margin: 0;
-  background: #0b0b0b;
+  background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
   color: #fff;
-  font-family: Arial, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 
-/* Pages */
+/* pages */
 .page {
   display: none;
   min-height: 100vh;
-  padding: 40px;
+}
+.page.active {
+  display: flex;
+}
+
+/* LOGIN PAGE */
+#login {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
-.page.active { display: block; }
 
-/* UI */
+#login h1 {
+  letter-spacing: 14px;
+  font-size: 3.2rem;
+  margin-bottom: 10px;
+}
+
+#login p {
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+
 input {
-  padding: 12px;
-  width: 260px;
-  border-radius: 6px;
+  padding: 14px;
+  width: 280px;
+  border-radius: 8px;
   border: none;
   font-size: 16px;
 }
+
 button {
-  padding: 12px 20px;
-  margin: 8px;
-  font-weight: bold;
+  padding: 14px 26px;
+  margin-top: 16px;
+  font-weight: 700;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  background: #2196f3;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
   color: white;
 }
-.ext {
-  background: #1e1e1e;
-  margin: 15px auto;
-  padding: 15px;
+
+/* EXTENSIONS PAGE */
+#extensions {
+  width: 100%;
+}
+
+/* layout */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  min-height: 100vh;
+}
+
+/* left branding */
+.brand {
+  padding: 60px;
+}
+
+.brand h1 {
+  letter-spacing: 18px;
+  font-size: 3.4rem;
+}
+
+.brand p {
+  margin-top: 20px;
   max-width: 420px;
-  border-radius: 8px;
+  opacity: 0.7;
+}
+
+/* right extensions */
+.ext-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 60px;
+  gap: 18px;
+}
+
+.ext {
+  width: 360px;
+  background: rgba(30,30,30,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px 22px;
+  text-align: left;
+  backdrop-filter: blur(8px);
+}
+
+.ext strong {
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.ext button {
+  margin-top: 10px;
+  width: 100%;
 }
 
 /* FULLSCREEN OVERLAY */
@@ -56,11 +128,11 @@ button {
   z-index: 9999;
   display: none;
 }
+
 #overlay iframe {
   width: 100%;
   height: 100%;
   border: none;
-  background: black;
 }
 </style>
 </head>
@@ -69,51 +141,68 @@ button {
 
 <!-- LOGIN -->
 <div id="login" class="page active">
-  <h1>Manhyo Reader</h1>
-  <p>Enter access key</p>
-  <input type="password" id="password" placeholder="Password">
-  <br><br>
-  <button onclick="login()">Enter</button>
+  <h1>MANHYO</h1>
+  <p>Private reader hub</p>
+  <input type="password" id="password" placeholder="Access key">
+  <button onclick="login()">ENTER</button>
 </div>
 
 <!-- EXTENSIONS -->
 <div id="extensions" class="page">
-  <h1>Extensions</h1>
+  <div class="layout">
 
-  <div class="ext"><strong>aioyumi</strong><br>
-    <button onclick="openIframe('https://asurascans.com/')">Fullscreen</button>
-  </div>
+    <div class="brand">
+      <h1>MANHYO</h1>
+      <p>
+        A dark, minimal reader hub inspired by modern scan platforms.
+        Select an extension to launch fullscreen reading mode.
+      </p>
+    </div>
 
-  <div class="ext"><strong>lumini</strong><br>
-    <button onclick="openIframe('https://writersscans.com/')">Fullscreen</button>
-  </div>
+    <div class="ext-list">
+      <div class="ext">
+        <strong>aioyumi</strong>
+        <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
+      </div>
 
-  <div class="ext"><strong>aeriya</strong><br>
-    <button onclick="openIframe('https://ezmanga.org/')">Fullscreen</button>
-  </div>
+      <div class="ext">
+        <strong>lumini</strong>
+        <button onclick="openFullscreen('https://writersscans.com/')">Fullscreen</button>
+      </div>
 
-  <div class="ext"><strong>sorya</strong><br>
-    <button onclick="openIframe('https://comix.to/')">Fullscreen</button>
-  </div>
+      <div class="ext">
+        <strong>aeriya</strong>
+        <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
+      </div>
 
-  <div class="ext"><strong>keiyoushi</strong><br>
-    <button onclick="openIframe('https://sirencomics.com/')">Fullscreen</button>
-  </div>
+      <div class="ext">
+        <strong>sorya</strong>
+        <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
+      </div>
 
-  <div class="ext"><strong>lemon8</strong><br>
-    <button onclick="openIframe('https://www.tiktok.com/')">Fullscreen</button>
+      <div class="ext">
+        <strong>keiyoushi</strong>
+        <button onclick="openFullscreen('https://sirencomics.com/')">Fullscreen</button>
+      </div>
+
+      <div class="ext">
+        <strong>lemon8</strong>
+        <button onclick="window.open('https://www.tiktok.com','_blank')">
+          Open (External)
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- FULLSCREEN OVERLAY -->
+<!-- OVERLAY -->
 <div id="overlay">
   <iframe id="reader"></iframe>
 </div>
 
 <script>
 const PASSWORD = "D3r5t0n3";
-let refreshTimer = null;
-const REFRESH_TIME = 120000; // 2 minutes
 
 function login() {
   if (document.getElementById("password").value !== PASSWORD) {
@@ -123,29 +212,18 @@ function login() {
   showPage("extensions");
 }
 
-/* SAME behavior for ALL extensions */
-function openIframe(url) {
-  clearInterval(refreshTimer);
-
+function openFullscreen(url) {
   const overlay = document.getElementById("overlay");
   const reader = document.getElementById("reader");
-
   reader.src = url;
   overlay.style.display = "block";
-
-  refreshTimer = setInterval(() => {
-    reader.src = reader.src;
-  }, REFRESH_TIME);
 }
 
-/* ESC exits */
-document.addEventListener("keydown", (e) => {
+/* ESC to exit */
+document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
-    clearInterval(refreshTimer);
-    const overlay = document.getElementById("overlay");
-    const reader = document.getElementById("reader");
-    overlay.style.display = "none";
-    reader.src = "";
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("reader").src = "";
   }
 });
 
