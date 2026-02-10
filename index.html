@@ -1,77 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Manhyo Reader</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+  * { box-sizing: border-box; }
+
   body {
     margin: 0;
     font-family: 'Space Grotesk', sans-serif;
-    background: #111;
+    background: radial-gradient(circle at top, #1b1b1b, #0b0b0b);
     color: #fff;
     text-align: center;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
   }
+
   .hidden { display: none; }
+
   #login-container, #main-container {
     width: 100%;
-    max-width: 900px;
+    max-width: 950px;
     padding: 2rem;
   }
-  input {
-    padding: 10px;
-    font-size: 1rem;
-    width: 75%;
-    margin-top: 1rem;
+
+  h1 {
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
   }
+
+  input {
+    padding: 12px;
+    font-size: 1rem;
+    width: min(320px, 90%);
+    margin-top: 1rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+  }
+
   button {
-    padding: 10px 20px;
+    padding: 12px 22px;
     margin-top: 1rem;
     font-size: 1rem;
     cursor: pointer;
-    background: #2196f3;
+    background: linear-gradient(135deg, #2196f3, #21cbf3);
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     color: #fff;
-    transition: 0.2s;
+    font-weight: 600;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
   }
-  button:hover { background: #1769aa; }
+
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(33,150,243,0.35);
+    opacity: 0.95;
+  }
+
+  #dynamic-text {
+    margin-top: 12px;
+    font-size: 1.05rem;
+    color: #ffeb3b;
+  }
 
   #extensions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-top: 1.8rem;
   }
+
   .ext-btn {
-    padding: 0.8rem;
-    background: #222;
-    border-radius: 6px;
+    padding: 0.9rem;
+    background: #1e1e1e;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    transition: 0.2s;
+    border: 1px solid #2b2b2b;
+    transition: background 0.2s, transform 0.15s;
   }
-  .ext-btn:hover { background: #444; }
+
+  .ext-btn:hover {
+    background: #2f2f2f;
+    transform: translateY(-1px);
+  }
 
   iframe {
     width: 100%;
     height: 70vh;
-    border: none;
-    margin-top: 1rem;
+    border: 1px solid #2b2b2b;
+    border-radius: 10px;
+    margin-top: 1.5rem;
+    background: #000;
   }
 
-  #dynamic-text {
-    margin-top: 10px;
-    font-size: 1.15rem;
-    color: #ffeb3b;
+  footer {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    opacity: 0.6;
   }
 </style>
 </head>
@@ -79,31 +112,51 @@
 
 <div id="login-container">
   <h1>Welcome to Manhyo Reader</h1>
-  <input type="password" id="password" placeholder="Enter password">
+  <p>Private reader hub — enter access key</p>
+  <input type="password" id="password" placeholder="Enter password" />
+  <br />
   <button onclick="checkPassword()">Enter</button>
-  <p id="dynamic-text">Preparing your reader...</p>
+  <p id="dynamic-text">Preparing your reader…</p>
 </div>
 
 <div id="main-container" class="hidden">
   <h1>Manhyo Extensions</h1>
+  <p>Select a source below to start reading</p>
+
   <div id="extensions"></div>
-  <iframe id="reader-frame" class="hidden"></iframe>
+
+  <button id="fullscreen-btn" class="hidden">Fullscreen</button>
+  <iframe id="reader-frame" class="hidden" referrerpolicy="no-referrer"></iframe>
+
+  <footer>Manhyo Reader • Minimal • Fast • Dark</footer>
 </div>
 
 <script>
-  const PASSWORD = "D3r5t0n3";
+  /* =====================
+     BASIC ACCESS CONTROL
+     ===================== */
+  const PASSWORD = "D3r5t0n3"; // change this
+
   const loginContainer = document.getElementById("login-container");
   const mainContainer = document.getElementById("main-container");
   const passwordInput = document.getElementById("password");
   const extensionsDiv = document.getElementById("extensions");
   const readerFrame = document.getElementById("reader-frame");
+  const fullscreenBtn = document.getElementById("fullscreen-btn");
   const dynamicText = document.getElementById("dynamic-text");
 
+  // Persist login during the session
+  if (sessionStorage.getItem("manhyo-auth") === "true") {
+    loginContainer.classList.add("hidden");
+    mainContainer.classList.remove("hidden");
+    loadExtensions();
+  }
+
   const statusMessages = [
-    "Select a source to begin reading!",
-    "If a site won’t embed it will open in a new tab!",
-    "Check out the extensions below!",
-    "Stay tuned for updates!"
+    "Select a source to begin reading",
+    "Some sites may open in a new tab",
+    "Choose an extension below",
+    "More sources coming soon"
   ];
 
   function updateDynamicText() {
@@ -116,7 +169,7 @@
     {name: "Comix.to", url: "https://comix.to/"},
     {name: "EZManga.org", url: "https://ezmanga.org/"},
     {name: "SirenScans", url: "https://sirenscans.com/"},
-    {name: "ThunderScans.com", url: "https://thunderscans.com/"},
+    {name: "ThunderScans", url: "https://thunderscans.com/"},
     {name: "Utoon.net", url: "https://utoon.net/"},
     {name: "Webtoons.com", url: "https://www.webtoons.com/"},
     {name: "ValirScans.com", url: "https://valirscans.com/"},
@@ -131,15 +184,17 @@
 
   function checkPassword() {
     if (passwordInput.value === PASSWORD) {
+      sessionStorage.setItem("manhyo-auth", "true");
       loginContainer.classList.add("hidden");
       mainContainer.classList.remove("hidden");
       loadExtensions();
     } else {
-      alert("Incorrect password!");
+      alert("Incorrect password");
     }
   }
 
   function loadExtensions() {
+    extensionsDiv.innerHTML = "";
     extensions.forEach(ext => {
       const btn = document.createElement("button");
       btn.className = "ext-btn";
@@ -150,17 +205,37 @@
   }
 
   function openExtension(url) {
+    fullscreenBtn.classList.remove("hidden");
     readerFrame.src = url;
     readerFrame.classList.remove("hidden");
+
+    // If embedding is blocked, keep iframe hidden and show notice
+    // Fullscreen support
+    fullscreenBtn.onclick = () => {
+      if (readerFrame.requestFullscreen) readerFrame.requestFullscreen();
+      else if (readerFrame.webkitRequestFullscreen) readerFrame.webkitRequestFullscreen();
+    };
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && document.fullscreenElement) document.exitFullscreen();
+    });
+
     setTimeout(() => {
-      const doc = readerFrame.contentDocument || readerFrame.contentWindow.document;
-      if (!doc.body || doc.body.innerHTML.trim().length === 0) {
-        window.open(url, "_blank");
+      try {
+        const doc = readerFrame.contentDocument || readerFrame.contentWindow.document;
+        if (!doc || !doc.body || doc.body.innerHTML.trim().length === 0) {
+          throw new Error("Embed blocked");
+        }
+      } catch (e) {
         readerFrame.src = "";
         readerFrame.classList.add("hidden");
+        alert("This site does not allow embedded viewing.");
       }
-    }, 1000);
+    }, 1200);
   }
+  // Auto refresh every 5 hours
+  setInterval(() => location.reload(), 5 * 60 * 60 * 1000);
+
 </script>
 
 </body>
