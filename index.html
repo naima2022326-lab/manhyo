@@ -125,10 +125,8 @@
 
   <div id="extensions"></div>
 
-  <button id="fullscreen-btn" class="hidden">Fullscreen</button>
-  <iframe id="reader-frame" class="hidden" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" allowfullscreen loading="eager"></iframe>
-
-  <footer>Manhyo Reader • Minimal • Fast • Dark</footer>
+  <footer>Manhyo Reader • Extension Launcher Mode</footer>
+Manhyo Reader • Minimal • Fast • Dark</footer>
 </div>
 
 <script>
@@ -166,20 +164,10 @@
   updateDynamicText();
 
   const extensions = [
+    {name: "AsuraScans", url: "https://asurascans.com/"},
     {name: "Comix.to", url: "https://comix.to/"},
     {name: "EZManga.org", url: "https://ezmanga.org/"},
-    {name: "SirenScans", url: "https://sirenscans.com/"},
-    {name: "ThunderScans", url: "https://thunderscans.com/"},
-    {name: "Utoon.net", url: "https://utoon.net/"},
-    {name: "Webtoons.com", url: "https://www.webtoons.com/"},
-    {name: "ValirScans.com", url: "https://valirscans.com/"},
-    {name: "WriterScans.com", url: "https://writerscans.com/"},
-    {name: "LuaToons.org", url: "https://luatoons.org/"},
-    {name: "LuaComic.org", url: "https://luacomic.org/"},
-    {name: "FlameComics.xyz", url: "https://flamecomics.xyz/"},
-    {name: "VortexScans.org", url: "https://vortexscans.org/"},
-    {name: "RokariComics.com", url: "https://rokaricomics.com/"},
-    {name: "ManhwaClan.com", url: "https://manhwaclan.com/"}
+    {name: "Webtoons.com", url: "https://www.webtoons.com/"}
   ];
 
   function checkPassword() {
@@ -198,23 +186,26 @@
     extensions.forEach(ext => {
       const btn = document.createElement("button");
       btn.className = "ext-btn";
-      btn.textContent = ext.name;
-      btn.onclick = () => openExtension(ext.url);
+      btn.textContent = ext.name + " (Fullscreen)";
+      btn.onclick = () => launchExtension(ext.url);
       extensionsDiv.appendChild(btn);
     });
+  });
   }
 
-  function openExtension(url) {
-    fullscreenBtn.classList.remove("hidden");
-    readerFrame.src = url;
-    readerFrame.classList.remove("hidden");
+  function launchExtension(url) {
+    // Best-effort fullscreen (must be user gesture)
+    try {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+    } catch (e) {}
 
-    // If embedding is blocked, keep iframe hidden and show notice
-    // Fullscreen support
-    fullscreenBtn.onclick = () => {
-      if (readerFrame.requestFullscreen) readerFrame.requestFullscreen();
-      else if (readerFrame.webkitRequestFullscreen) readerFrame.webkitRequestFullscreen();
-    };
+    // Navigate in SAME TAB (Scenario A)
+    setTimeout(() => {
+      window.location.href = url;
+    }, 150);
+  };
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && document.fullscreenElement) document.exitFullscreen();
@@ -233,7 +224,7 @@
       }
     }, 1200);
   }
-  // Auto refresh every 5 hours
+  // Auto refresh every 5 hours (when on Manhyo page)
   setInterval(() => location.reload(), 5 * 60 * 60 * 1000);
 
 </script>
