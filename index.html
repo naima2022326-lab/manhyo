@@ -5,14 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
 body {
   margin: 0;
-  background: #0b0b0b;
+  background: radial-gradient(circle at top, #1a0f2e, #0b0b0b);
   color: #fff;
-  font-family: "Space Grotesk", Arial, sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 /* Pages */
@@ -20,28 +18,17 @@ body {
   display: none;
   min-height: 100vh;
   padding: 40px;
-  text-align: center;
 }
 
 .page.active {
   display: block;
 }
 
-/* HOME PAGE */
-#login h1 {
-  font-size: 64px;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
+/* Login */
+#login {
+  text-align: center;
 }
 
-#login p {
-  font-size: 18px;
-  opacity: 0.8;
-  letter-spacing: 1px;
-}
-
-/* Inputs & Buttons */
 input {
   padding: 12px;
   width: 260px;
@@ -51,29 +38,149 @@ input {
 }
 
 button {
-  padding: 12px 22px;
+  padding: 12px 20px;
   margin: 8px;
   font-weight: bold;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: linear-gradient(135deg, #7b2cff, #9c6bff);
+  background: linear-gradient(135deg, #7c4dff, #9c27b0);
   color: white;
 }
 
-/* Extensions */
-.ext {
-  background: #161616;
-  margin: 18px auto;
-  padding: 18px;
-  max-width: 420px;
-  border-radius: 10px;
-  border: 1px solid #2a2a2a;
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
 }
 
-.ext strong {
-  font-size: 22px;
+#site-logo {
+  width: 44px;
+  height: auto;
+}
+
+header h1 {
+  font-family: "Space Grotesk", Arial, sans-serif;
   letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
-/* FULLSCREEN OVERLA*
+/* Extensions */
+#extensions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ext-list {
+  width: 420px;
+}
+
+.ext {
+  background: #1e1e1e;
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* FULLSCREEN OVERLAY */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: none;
+}
+
+#overlay iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="page active">
+  <h1>MANHYO</h1>
+  <p>Enter access key</p>
+  <input type="password" id="password" placeholder="Password">
+  <br><br>
+  <button onclick="login()">Enter</button>
+</div>
+
+<!-- EXTENSIONS PAGE -->
+<div id="extensionsPage" class="page">
+  <header>
+    <img id="site-logo" src="manhyo_logo.png" alt="Manhyo Logo">
+    <h1>MANHYO</h1>
+  </header>
+
+  <div id="extensions">
+    <div class="ext-list">
+
+      <div class="ext">
+        <strong>A</strong><br>
+        <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
+      </div>
+
+      <div class="ext">
+        <strong>EZ</strong><br>
+        <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
+      </div>
+
+      <div class="ext">
+        <strong>C</strong><br>
+        <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN OVERLAY -->
+<div id="overlay">
+  <iframe id="reader"></iframe>
+</div>
+
+<script>
+const PASSWORD = "D3r5t0n3";
+
+function login() {
+  if (document.getElementById("password").value !== PASSWORD) {
+    alert("Wrong password");
+    return;
+  }
+  showPage("extensionsPage");
+}
+
+function openFullscreen(url) {
+  const overlay = document.getElementById("overlay");
+  const reader = document.getElementById("reader");
+
+  reader.src = url;
+  overlay.style.display = "block";
+}
+
+/* ESC to exit */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("reader").src = "";
+  }
+});
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p =>
+    p.classList.remove("active")
+  );
+  document.getElementById(id).classList.add("active");
+}
+</script>
+
+</body>
+</html>
