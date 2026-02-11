@@ -5,156 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
-/* ------------------------ */
-/* GENERAL BODY + FONT */
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
+  background: radial-gradient(circle at top, #1a0f2e, #0b0b0b);
   color: #fff;
-  font-family: "Space Grotesk", sans-serif;
-  overflow-x: hidden;
+  font-family: Arial, sans-serif;
 }
 
-/* ------------------------ */
-/* LOGO */
-#site-logo {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 100px;
-  height: auto;
-  z-index: 10000;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-#site-logo:hover {
-  transform: scale(1.05);
-}
-
-/* ------------------------ */
-/* PAGES */
+/* Pages */
 .page {
   display: none;
   min-height: 100vh;
+  padding: 40px;
 }
+
 .page.active {
-  display: flex;
+  display: block;
 }
 
-/* ------------------------ */
-/* LOGIN PAGE */
+/* Login */
 #login {
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
-  width: 100%;
-}
-
-#login h1 {
-  letter-spacing: 14px;
-  font-size: 3.2rem;
-  margin-bottom: 10px;
-}
-
-#login p {
-  opacity: 0.7;
-  margin-bottom: 30px;
 }
 
 input {
-  padding: 14px;
-  width: 280px;
-  border-radius: 8px;
+  padding: 12px;
+  width: 260px;
+  border-radius: 6px;
   border: none;
   font-size: 16px;
 }
 
 button {
-  padding: 14px 26px;
-  margin-top: 16px;
-  font-weight: 700;
+  padding: 12px 20px;
+  margin: 8px;
+  font-weight: bold;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  background: linear-gradient(135deg, #7c4dff, #9c27b0);
   color: white;
-  transition: transform 0.15s, filter 0.15s;
 }
 
-button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-}
-
-/* ------------------------ */
-/* EXTENSIONS PAGE */
-#extensions {
-  width: 100%;
-}
-
-/* LAYOUT */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  min-height: 100vh;
-}
-
-/* LEFT BRANDING */
-.brand {
-  padding: 60px;
-}
-
-.brand h1 {
-  letter-spacing: 18px;
-  font-size: 3.4rem;
-}
-
-.brand p {
-  margin-top: 20px;
-  max-width: 420px;
-  opacity: 0.7;
-  line-height: 1.6;
-}
-
-/* RIGHT EXTENSIONS */
-.ext-list {
+/* Header */
+header {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  padding: 60px;
-  gap: 18px;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+#site-logo {
+  width: 44px;
+  height: auto;
+}
+
+header h1 {
+  font-family: "Space Grotesk", Arial, sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Extensions */
+#extensions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ext-list {
+  width: 420px;
 }
 
 .ext {
-  width: 360px;
-  background: rgba(30,30,30,0.85);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 18px 22px;
-  text-align: left;
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.ext:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(142,45,226,0.25);
-}
-
-.ext strong {
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-}
-
-.ext button {
-  margin-top: 10px;
-  width: 100%;
+  background: #1e1e1e;
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
 }
 
 /* FULLSCREEN OVERLAY */
@@ -176,56 +104,41 @@ button:hover {
 
 <body>
 
-<!-- LOGO -->
-<img id="site-logo" src="A_digital_graphic_logo_design_for_&quot;MANHYO&quot;_feature.png" alt="Manhyo Logo" onclick="showPage('login')">
-
-<!-- LOGIN PAGE -->
+<!-- LOGIN -->
 <div id="login" class="page active">
   <h1>MANHYO</h1>
-  <p>Private reader hub</p>
-  <input type="password" id="password" placeholder="Access key">
-  <button onclick="login()">ENTER</button>
+  <p>Enter access key</p>
+  <input type="password" id="password" placeholder="Password">
+  <br><br>
+  <button onclick="login()">Enter</button>
 </div>
 
 <!-- EXTENSIONS PAGE -->
-<div id="extensions" class="page">
-  <div class="layout">
+<div id="extensionsPage" class="page">
+  <header>
+    <img id="site-logo" src="manhyo_logo.png" alt="Manhyo Logo">
+    <h1>MANHYO</h1>
+  </header>
 
-    <div class="brand">
-      <h1>MANHYO</h1>
-      <p>
-        A dark, minimal reader hub inspired by modern scan platforms.
-        Select an extension to launch fullscreen reading mode.
-      </p>
-    </div>
-
+  <div id="extensions">
     <div class="ext-list">
+
       <div class="ext">
-        <strong>aioyumi</strong>
+        <strong>A</strong><br>
         <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
       </div>
 
       <div class="ext">
-        <strong>lumini</strong>
-        <button onclick="openFullscreen('https://manta.net/')">Fullscreen</button>
-      </div>
-
-      <div class="ext">
-        <strong>aeriya</strong>
+        <strong>EZ</strong><br>
         <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
       </div>
 
       <div class="ext">
-        <strong>sorya</strong>
+        <strong>C</strong><br>
         <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
       </div>
 
-      <div class="ext">
-        <strong>keiyoushi</strong>
-        <button onclick="openFullscreen('https://sirenscans.com/')">Fullscreen</button>
-      </div>
     </div>
-
   </div>
 </div>
 
@@ -237,32 +150,30 @@ button:hover {
 <script>
 const PASSWORD = "D3r5t0n3";
 
-/* LOGIN */
 function login() {
   if (document.getElementById("password").value !== PASSWORD) {
     alert("Wrong password");
     return;
   }
-  showPage("extensions");
+  showPage("extensionsPage");
 }
 
-/* FULLSCREEN */
 function openFullscreen(url) {
   const overlay = document.getElementById("overlay");
   const reader = document.getElementById("reader");
+
   reader.src = url;
   overlay.style.display = "block";
 }
 
-/* ESC to exit fullscreen */
-document.addEventListener("keydown", e => {
+/* ESC to exit */
+document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     document.getElementById("overlay").style.display = "none";
     document.getElementById("reader").src = "";
   }
 });
 
-/* PAGE SWITCHING */
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p =>
     p.classList.remove("active")
