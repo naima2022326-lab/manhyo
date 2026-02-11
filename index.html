@@ -8,8 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ------------------------ */
-/* GENERAL BODY + FONT */
 body {
   margin: 0;
   background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
@@ -18,60 +16,32 @@ body {
   overflow-x: hidden;
 }
 
-/* ------------------------ */
-/* LOGO */
 #site-logo {
   position: fixed;
   top: 20px;
   left: 20px;
   width: 100px;
-  height: auto;
   z-index: 10000;
   cursor: pointer;
-  transition: transform 0.2s;
 }
 
-#site-logo:hover {
-  transform: scale(1.05);
-}
+.page { display: none; min-height: 100vh; }
+.page.active { display: flex; }
 
-/* ------------------------ */
-/* PAGES */
-.page {
-  display: none;
-  min-height: 100vh;
-}
-.page.active {
-  display: flex;
-}
-
-/* ------------------------ */
-/* LOGIN PAGE */
 #login {
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 100%;
 }
 
-#login h1 {
-  letter-spacing: 14px;
-  font-size: 3.2rem;
-  margin-bottom: 10px;
-}
-
-#login p {
-  opacity: 0.7;
-  margin-bottom: 30px;
-}
+#login h1 { letter-spacing: 14px; font-size: 3.2rem; }
 
 input {
   padding: 14px;
   width: 280px;
   border-radius: 8px;
   border: none;
-  font-size: 16px;
 }
 
 button {
@@ -83,49 +53,21 @@ button {
   cursor: pointer;
   background: linear-gradient(135deg, #8e2de2, #4a00e0);
   color: white;
-  transition: transform 0.15s, filter 0.15s;
 }
 
-button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-}
+#extensions { width: 100%; }
 
-/* ------------------------ */
-/* EXTENSIONS PAGE */
-#extensions {
-  width: 100%;
-}
-
-/* LAYOUT */
 .layout {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   min-height: 100vh;
 }
 
-/* LEFT BRANDING */
-.brand {
-  padding: 60px;
-}
+.brand { padding: 60px; }
 
-.brand h1 {
-  letter-spacing: 18px;
-  font-size: 3.4rem;
-}
-
-.brand p {
-  margin-top: 20px;
-  max-width: 420px;
-  opacity: 0.7;
-  line-height: 1.6;
-}
-
-/* RIGHT EXTENSIONS */
 .ext-list {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-end;
   padding: 60px;
   gap: 18px;
@@ -134,36 +76,18 @@ button:hover {
 .ext {
   width: 360px;
   background: rgba(30,30,30,0.85);
-  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 18px 22px;
-  text-align: left;
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.ext:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(142,45,226,0.25);
-}
+.ext button { width: 100%; }
 
-.ext strong {
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-}
-
-.ext button {
-  margin-top: 10px;
-  width: 100%;
-}
-
-/* FULLSCREEN OVERLAY */
 #overlay {
   position: fixed;
   inset: 0;
   background: #000;
-  z-index: 9999;
   display: none;
+  z-index: 9999;
 }
 
 #overlay iframe {
@@ -176,10 +100,8 @@ button:hover {
 
 <body>
 
-<!-- LOGO (FIXED) -->
-<img id="site-logo" src="manhyo_logo.png" alt="Manhyo Logo" onclick="showPage('login')">
+<img id="site-logo" src="manhyo_logo.png" onclick="showPage('login')">
 
-<!-- LOGIN PAGE -->
 <div id="login" class="page active">
   <h1>MANHYO</h1>
   <p>Private reader hub</p>
@@ -187,16 +109,12 @@ button:hover {
   <button onclick="login()">ENTER</button>
 </div>
 
-<!-- EXTENSIONS PAGE -->
 <div id="extensions" class="page">
   <div class="layout">
 
     <div class="brand">
       <h1>MANHYO</h1>
-      <p>
-      Hello everyone who some - how got this website, please be grateful to me the owner of this website or you'll never find this again, it will be deleted from your device forever.
-      Now Please select an extension to launch fullscreen reading mode. 1. Aurascans, 3. Ezmanga, 4. Comix, forget the 2nd and 5th since they don't work
-      </p>
+      <p>Select an extension to launch.</p>
     </div>
 
     <div class="ext-list">
@@ -224,12 +142,19 @@ button:hover {
         <strong>Utoon</strong>
         <button onclick="openFullscreen('https://utoon.net/')">Fullscreen</button>
       </div>
+
+      <!-- ✅ TIKTOK EXTENSION -->
+      <div class="ext">
+        <strong>TikTok</strong>
+        <button onclick="openExternal('https://www.tiktok.com')">
+          Open TikTok
+        </button>
+      </div>
     </div>
 
   </div>
 </div>
 
-<!-- FULLSCREEN OVERLAY -->
 <div id="overlay">
   <iframe id="reader"></iframe>
 </div>
@@ -237,7 +162,6 @@ button:hover {
 <script>
 const PASSWORD = "D3r5t0n3";
 
-/* LOGIN */
 function login() {
   if (document.getElementById("password").value !== PASSWORD) {
     alert("Wrong password");
@@ -246,15 +170,16 @@ function login() {
   showPage("extensions");
 }
 
-/* FULLSCREEN */
 function openFullscreen(url) {
-  const overlay = document.getElementById("overlay");
-  const reader = document.getElementById("reader");
-  reader.src = url;
-  overlay.style.display = "block";
+  document.getElementById("reader").src = url;
+  document.getElementById("overlay").style.display = "block";
 }
 
-/* ESC to exit fullscreen */
+/* ✅ TikTok-safe launcher */
+function openExternal(url) {
+  window.open(url, "_blank", "noopener");
+}
+
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     document.getElementById("overlay").style.display = "none";
@@ -262,15 +187,11 @@ document.addEventListener("keydown", e => {
   }
 });
 
-/* PAGE SWITCHING */
 function showPage(id) {
-  document.querySelectorAll(".page").forEach(p =>
-    p.classList.remove("active")
-  );
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 </script>
 
 </body>
 </html>
-
