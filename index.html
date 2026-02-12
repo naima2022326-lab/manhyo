@@ -100,7 +100,7 @@ button {
   width: 100%;
 }
 
-/* Overlay with iframe */
+/* Overlay iframe styling */
 #overlay {
   position: fixed;
   inset: 0;
@@ -134,40 +134,59 @@ button {
       <p>Select an extension to launch.</p>
     </div>
     <div class="ext-list">
+      <!-- Newgrounds in Utoon -->
       <div class="ext">
-        <strong>Asurascans</strong>
-        <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
+        <strong>Newgrounds</strong>
+        <button onclick="loadInIframe('https://www.newgrounds.com/')">Load in iframe</button>
       </div>
+      
+      <!-- Watchparty -->
       <div class="ext">
         <strong>Watchparty</strong>
         <button onclick="openFullscreen('https://www.watchparty.me/')">Fullscreen</button>
       </div>
+      
+      <!-- Ezmanga -->
       <div class="ext">
         <strong>Ezmanga</strong>
         <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
       </div>
+      
+      <!-- Comix -->
       <div class="ext">
         <strong>Comix</strong>
         <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
       </div>
+      
+      <!-- Utoon (embed from poki) -->
       <div class="ext">
         <strong>Utoon</strong>
-        <!-- Try embedding in iframe -->
-        <button onclick="loadInIframe('https://poki.com/')">Load Utoon in iframe</button>
+        <button onclick="loadInIframe('https://poki.com/')">Load in iframe</button>
       </div>
+      
+      <!-- Chess.com (embed) -->
       <div class="ext">
         <strong>Chess.com</strong>
-        <!-- Try embedding in iframe -->
-        <button onclick="loadInIframe('https://www.chess.com/')">Load Chess in iframe</button>
+        <button onclick="loadInIframe('https://www.chess.com/')">Load in iframe</button>
       </div>
+      
+      <!-- TikTok (external link) -->
       <div class="ext">
         <strong>TikTok</strong>
-        <button onclick="openExternal('https://www.tiktok.com')">Open TikTok</button>
+        <button onclick="openExternal('https://www.tiktok.com')">Open in new tab</button>
       </div>
+      
+      <!-- CrazyGames (embed) -->
+      <div class="ext">
+        <strong>CrazyGames</strong>
+        <button onclick="loadInIframe('https://www.crazygames.com/')">Load in iframe</button>
+      </div>
+      
     </div>
   </div>
 </div>
 
+<!-- Overlay iframe container -->
 <div id="overlay">
   <iframe id="reader"></iframe>
 </div>
@@ -183,33 +202,29 @@ function login() {
   showPage("extensions");
 }
 
-function openFullscreen(url) {
-  document.getElementById("reader").src = url;
-  document.getElementById("overlay").style.display = "block";
+function showPage(id) {
+  document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
-/* Load site into iframe, may work if site allows embedding */
+/* Load URL into iframe */
 function loadInIframe(url) {
   document.getElementById("reader").src = url;
   document.getElementById("overlay").style.display = "block";
 }
 
-/* Open in new tab, fallback if iframe doesn't work */
+/* Open URL in new tab, fallback for sites blocking iframe */
 function openExternal(url) {
   window.open(url, "_blank");
 }
 
+/* Close overlay on Escape key press */
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     document.getElementById("overlay").style.display = "none";
     document.getElementById("reader").src = "";
   }
 });
-
-function showPage(id) {
-  document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
 </script>
 
 </body>
