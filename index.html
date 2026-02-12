@@ -100,6 +100,7 @@ button {
   width: 100%;
 }
 
+/* Overlay with iframe */
 #overlay {
   position: fixed;
   inset: 0;
@@ -151,15 +152,14 @@ button {
       </div>
       <div class="ext">
         <strong>Poki</strong>
-        <!-- Changed to open in new tab -->
-        <button onclick="openExternal('https://poki.com/')">Open Utoon (New Tab)</button>
+        <!-- Try embedding in iframe -->
+        <button onclick="loadInIframe('https://poki.com/')">Load Utoon in iframe</button>
       </div>
       <div class="ext">
         <strong>Chess</strong>
-        <!-- Changed to open in new tab -->
-        <button onclick="openExternal('https://www.chess.com/')">Open Chess.com (New Tab)</button>
+        <!-- Try embedding in iframe -->
+        <button onclick="loadInIframe('https://www.chess.com/')">Load Chess in iframe</button>
       </div>
-      <!-- ✅ TIKTOK EXTENSION -->
       <div class="ext">
         <strong>TikTok</strong>
         <button onclick="openExternal('https://www.tiktok.com')">Open TikTok</button>
@@ -188,7 +188,13 @@ function openFullscreen(url) {
   document.getElementById("overlay").style.display = "block";
 }
 
-/* This function opens links in a new tab, useful for sites that block iframes */
+/* Load site into iframe, may work if site allows embedding */
+function loadInIframe(url) {
+  document.getElementById("reader").src = url;
+  document.getElementById("overlay").style.display = "block";
+}
+
+/* Open in new tab, fallback if iframe doesn't work */
 function openExternal(url) {
   window.open(url, "_blank");
 }
