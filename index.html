@@ -3,220 +3,126 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Manhyo Reader - All Extensions & Games</title>
+<title>Manhyo Reader - Extensions Only</title>
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+<!-- Google Fonts for big title -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet" />
 
 <style>
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
-  font-family: "Space Grotesk", sans-serif;
-  color: #fff;
-  overflow-x: hidden;
-  padding: 20px;
-}
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
+    font-family: "Courier New", monospace;
+    color: #fff;
+    overflow-x: hidden;
+    padding: 20px;
+    text-align: center;
+  }
 
-/* Pages */
-.page {
-  display: none;
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-}
-.page.active {
-  display: flex;
-  flex-direction: column;
-}
+  #title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+  }
 
-/* Navigation buttons */
-nav {
-  margin-bottom: 20px;
-}
-button {
-  padding: 10px 20px;
-  margin: 8px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
-  color: #fff;
-  cursor: pointer;
-  font-weight: 600;
-}
-button:hover {
-  opacity: 0.9;
-}
+  /* Sections: homepage, extensions only, no buttons */
+  .section {
+    display: none; /* hide all by default */
+  }
+  .section.active {
+    display: block; /* show active section */
+  }
 
-/* Extensions & Games layout */
-.extensions-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-}
-.extension-card {
-  background: rgba(30,30,30,0.85);
-  border-radius: 14px;
-  padding: 15px;
-  flex: 1 1 200px;
-  max-width: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-.extension-card h3 {
-  margin-top: 0;
-}
-.extension-card button {
-  margin-top: 10px;
-}
-
-/* Overlay for fullscreen site */
-#overlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  display: none;
-  z-index: 9999;
-}
-#overlay iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
+  /* Homepage style */
+  #homepage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
 </style>
 </head>
 <body>
 
-<h1>Manhyo Extensions & Games Hub</h1>
+<h1 id="title">MANHYO</h1>
 
-<!-- Navigation Buttons -->
-<nav>
-  <button onclick="showPage('login')">Login</button>
-  <button onclick="showPage('main')">Main</button>
-  <button onclick="showPage('extensions')">Extensions</button>
-  <button onclick="showPage('games')">Games</button>
-</nav>
-
-<!-- Login Page -->
-<div id="login" class="page" style="align-items:center; justify-content:center;">
-  <h1>MANHYO</h1>
-  <p>Private reader hub</p>
-  <input type="password" id="password" placeholder="Password" />
-  <button onclick="login()">ENTER</button>
+<!-- Homepage with password prompt -->
+<div id="homepage" class="section active">
+  <h2 style="font-family:'Space Grotesk'; font-size:2rem;">Enter Password</h2>
+  <input type="password" id="passwordInput" placeholder="Password" />
+  <button onclick="verifyPassword()">Enter</button>
 </div>
 
-<!-- Main Page -->
-<div id="main" class="page" style="align-items:center; justify-content:center;">
-  <h2>Welcome to MANHYO</h2>
-  <p>Select a category to explore extensions or games.</p>
-</div>
-
-<!-- Extensions Page -->
-<div id="extensions" class="page">
+<!-- Extensions section, hidden initially -->
+<div id="extensions" class="section">
   <h2>Extensions</h2>
-  <div class="extensions-container">
-    <div class="extension-card">
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;">
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
       <h3>Asurascans</h3>
-      <button onclick="openFullscreen('https://asurascans.com/')">Fullscreen</button>
+      <button onclick="openFullscreen('https://asurascans.com/')">Open in Viewer</button>
     </div>
-    <div class="extension-card">
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
       <h3>Watchparty</h3>
-      <button onclick="openFullscreen('https://www.watchparty.me/')">Fullscreen</button>
+      <button onclick="openFullscreen('https://www.watchparty.me/')">Open in Viewer</button>
     </div>
-    <div class="extension-card">
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
       <h3>Ezmanga</h3>
-      <button onclick="openFullscreen('https://ezmanga.org/')">Fullscreen</button>
+      <button onclick="openFullscreen('https://ezmanga.org/')">Open in Viewer</button>
     </div>
-    <div class="extension-card">
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
       <h3>Comix</h3>
-      <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
+      <button onclick="openFullscreen('https://comix.to/')">Open in Viewer</button>
     </div>
-    <div class="extension-card">
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
       <h3>Utoon</h3>
-      <button onclick="openFullscreen('https://utoon.net/')">Fullscreen</button>
+      <button onclick="openFullscreen('https://utoon.net/')">Open in Viewer</button>
     </div>
-    <div class="extension-card">
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
       <h3>TikTok</h3>
-      <button onclick="openExternal('https://www.tiktok.com')">Open TikTok</button>
+      <button onclick="openFullscreen('https://www.tiktok.com')">Open in Viewer</button>
+    </div>
+    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
+      <h3>Google</h3>
+      <button onclick="openFullscreen('https://www.google.com')">Open in Viewer</button>
     </div>
   </div>
-  <button onclick="showPage('main')">Back to Main</button>
-</div>
-
-<!-- Games Page -->
-<div id="games" class="page">
-  <h2>Games</h2>
-  <div class="extensions-container">
-    <div class="extension-card">
-      <h3>Newgrounds</h3>
-      <button onclick="openFullscreen('https://www.newgrounds.com/')">Fullscreen</button>
-    </div>
-    <div class="extension-card">
-      <h3>Itch.io</h3>
-      <button onclick="openFullscreen('https://itch.io/')">Fullscreen</button>
-    </div>
-    <div class="extension-card">
-      <h3>CrazyGames</h3>
-      <button onclick="openFullscreen('https://www.crazygames.com/')">Fullscreen</button>
-    </div>
-    <div class="extension-card">
-      <h3>Kongregate</h3>
-      <button onclick="openFullscreen('https://www.kongregate.com/')">Fullscreen</button>
-    </div>
-  </div>
-  <button onclick="showPage('main')">Back to Main</button>
 </div>
 
 <!-- Overlay for fullscreen sites -->
-<div id="overlay">
-  <iframe id="reader"></iframe>
+<div id="overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:9999;">
+  <iframe id="reader" style="width:100%; height:100%; border:none;"></iframe>
 </div>
 
 <script>
-const PASSWORD = "D3r5t0n3";
-
-function login() {
-  const pw = document.getElementById("password").value;
-  if (pw !== PASSWORD) {
+function verifyPassword() {
+  const pw = document.getElementById("passwordInput").value;
+  if (pw === "D3r5t0n3") {
+    document.getElementById("homepage").style.display = "none";
+    document.getElementById("extensions").style.display = "block";
+  } else {
     alert("Wrong password");
-    return;
   }
-  showPage('extensions');
 }
 
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// Fullscreen loader with error detection
 function openFullscreen(url) {
   const iframe = document.getElementById("reader");
   const overlay = document.getElementById("overlay");
   overlay.style.display = "block";
   iframe.src = "";
-
+  // Set a timeout for load error
   const timeoutId = setTimeout(() => {
     alert("Failed to load the site. It may be blocked or refusing connection.");
     overlay.style.display = "none";
   }, 15000);
-
+  
   iframe.onload = () => {
     clearTimeout(timeoutId);
   };
-
   iframe.src = url;
 }
 
-// Open external site in new tab
-function openExternal(url) {
-  window.open(url, "_blank", "noopener");
-}
-
-// Close overlay on Escape key
+// Close overlay on Escape
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     document.getElementById("overlay").style.display = "none";
