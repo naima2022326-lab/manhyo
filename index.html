@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Manhyo Reader with Games Category</title>
+<title>My Embedded Games Collection</title>
 
 <!-- Google Fonts -->
 <link
@@ -15,72 +15,46 @@
 body {
   margin: 0;
   background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
-  color: #fff;
   font-family: "Space Grotesk", sans-serif;
-  overflow-x: hidden;
+  color: #fff;
+  padding: 20px;
 }
 
-#site-logo {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 100px;
-  z-index: 10000;
-  cursor: pointer;
-}
-
-/* Container for boxes */
+/* Container for all boxes */
 .box-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  padding: 20px;
-  margin-top: 150px; /* space for logo */
 }
 
-/* Each box style */
+/* Individual box styles */
 .box {
   background: rgba(30, 30, 30, 0.85);
   border-radius: 10px;
-  padding: 20px;
-  width: 300px;
+  padding: 15px;
+  width: 100%;
+  max-width: 600px;
   box-shadow: 0 0 10px #000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Box title */
 .box h3 {
   margin-top: 0;
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-/* Buttons inside boxes */
-button {
+.embed-container {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: none;
+  height: 400px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
-  color: #fff;
-  cursor: pointer;
-  font-weight: 600;
+  overflow: hidden;
+  position: relative;
 }
 
-button:hover {
-  opacity: 0.9;
-}
-
-/* Overlay iframe styling */
-#overlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  display: none;
-  z-index: 9999;
-}
-
-#overlay iframe {
+.embed-container iframe {
   width: 100%;
   height: 100%;
   border: none;
@@ -89,83 +63,39 @@ button:hover {
 </head>
 <body>
 
-<img id="site-logo" src="manhyo_logo.png" onclick="showPage('login')" />
+<h1>My Collection of Official Embedded Games</h1>
+<div class="box-container">
 
-<div id="login" class="page active" style="text-align:center;">
-  <h1>MANHYO</h1>
-  <p>Private reader hub</p>
-  <input type="password" id="password" placeholder="Password" />
-  <button onclick="login()">ENTER</button>
-</div>
-
-<div id="extensions" class="page" style="display:block; padding:20px;">
-  <h2>Select Your Category</h2>
-  <div class="box-container">
-    <!-- Games Category -->
-    <div class="box">
-      <h3>Games</h3>
-      <!-- List of game sites with fullscreen buttons -->
-      <button onclick="openFullscreen('https://www.newgrounds.com/')">Newgrounds</button>
-      <button onclick="openFullscreen('https://itch.io/')">Itch.io</button>
-      <button onclick="openFullscreen('https://www.crazygames.com/')">CrazyGames</button>
-      <button onclick="openFullscreen('https://www.kongregate.com/')">Kongregate</button>
-    </div>
-    
-    <!-- Other categories (optional) -->
-    <div class="box">
-      <h3>Video Sites</h3>
-      <button onclick="openFullscreen('https://www.youtube.com/')">YouTube</button>
-      <button onclick="openFullscreen('https://vimeo.com/')">Vimeo</button>
-    </div>
-    
-    <div class="box">
-      <h3>Social & Others</h3>
-      <button onclick="openFullscreen('https://www.tiktok.com/')">TikTok</button>
-      <button onclick="openFullscreen('https://www.netflix.com/')">Netflix</button>
+  <!-- Replace src URLs with your actual embed URLs -->
+  <div class="box">
+    <h3>Newgrounds Game</h3>
+    <div class="embed-container">
+      <iframe src="https://www.newgrounds.com/portal/view/XXXX" allowfullscreen></iframe>
     </div>
   </div>
+
+  <div class="box">
+    <h3>Itch.io Game</h3>
+    <div class="embed-container">
+      <iframe src="https://yourgame.itch.io/game-name" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>CrazyGames Game</h3>
+    <div class="embed-container">
+      <iframe src="https://www.crazygames.com/game/game-name" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Kongregate Game</h3>
+    <div class="embed-container">
+      <iframe src="https://www.kongregate.com/games/username/game-title" allowfullscreen></iframe>
+    </div>
+  </div>
+
 </div>
-
-<!-- Overlay iframe container -->
-<div id="overlay">
-  <iframe id="reader"></iframe>
-</div>
-
-<script>
-const PASSWORD = "D3r5t0n3";
-
-function login() {
-  if (document.getElementById("password").value !== PASSWORD) {
-    alert("Wrong password");
-    return;
-  }
-  showPage("extensions");
-}
-
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-/* Load URL into iframe (fullscreen mode) */
-function openFullscreen(url) {
-  document.getElementById("reader").src = url;
-  document.getElementById("overlay").style.display = "block";
-}
-
-/* Open URL in new tab (fallback) */
-function openExternal(url) {
-  window.open(url, "_blank");
-}
-
-/* Close overlay on Escape key */
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    document.getElementById("overlay").style.display = "none";
-    document.getElementById("reader").src = "";
-  }
-});
-</script>
 
 </body>
 </html>
