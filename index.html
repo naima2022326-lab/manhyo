@@ -114,7 +114,6 @@ button {
 }
 </style>
 </head>
-
 <body>
 
 <img id="site-logo" src="manhyo_logo.png" onclick="showPage('login')" />
@@ -155,16 +154,20 @@ button {
       </div>
 
       <div class="ext">
-        <strong>Poki</strong>
+        <strong>Utoon</strong>
         <button onclick="openFullscreen('https://poki.com/')">Fullscreen</button>
+      </div>
+
+      <!-- New Chess.com extension -->
+      <div class="ext">
+        <strong>Chess.com</strong>
+        <button onclick="openFullscreen('https://www.chess.com/')">Fullscreen</button>
       </div>
 
       <!-- ✅ TIKTOK EXTENSION -->
       <div class="ext">
         <strong>TikTok</strong>
-        <button onclick="openExternal('https://www.tiktok.com')">
-          Open TikTok
-        </button>
+        <button onclick="openExternal('https://www.tiktok.com')">Open TikTok</button>
       </div>
     </div>
   </div>
@@ -190,7 +193,7 @@ function openFullscreen(url) {
   document.getElementById("overlay").style.display = "block";
 }
 
-/* ✅ TikTok-safe launcher (opens in new tab) */
+/* Open in new tab, for sites with embedding restrictions */
 function openExternal(url) {
   window.open(url, "_blank");
 }
