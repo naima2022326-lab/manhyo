@@ -134,10 +134,10 @@ button {
       <p>Select an extension to launch.</p>
     </div>
     <div class="ext-list">
-      <!-- Newgrounds in Utoon -->
+      <!-- Newgrounds in Fullscreen -->
       <div class="ext">
         <strong>Newgrounds</strong>
-        <button onclick="loadInIframe('https://www.newgrounds.com/')">Load in iframe</button>
+        <button onclick="openFullscreen('https://www.newgrounds.com/')">Fullscreen</button>
       </div>
       
       <!-- Watchparty -->
@@ -158,28 +158,28 @@ button {
         <button onclick="openFullscreen('https://comix.to/')">Fullscreen</button>
       </div>
       
-      <!-- Utoon (embed from poki) -->
+      <!-- Utoon -->
       <div class="ext">
         <strong>Utoon</strong>
-        <button onclick="loadInIframe('https://poki.com/')">Load in iframe</button>
+        <button onclick="openFullscreen('https://poki.com/')">Fullscreen</button>
       </div>
       
-      <!-- Chess.com (embed) -->
+      <!-- Chess.com -->
       <div class="ext">
         <strong>Chess.com</strong>
-        <button onclick="loadInIframe('https://www.chess.com/')">Load in iframe</button>
+        <button onclick="openFullscreen('https://www.chess.com/')">Fullscreen</button>
       </div>
       
-      <!-- TikTok (external link) -->
+      <!-- TikTok (open in new tab, fallback) -->
       <div class="ext">
         <strong>TikTok</strong>
-        <button onclick="openExternal('https://www.tiktok.com')">Open in new tab</button>
+        <button onclick="openExternal('https://www.tiktok.com')">Open TikTok</button>
       </div>
       
-      <!-- CrazyGames (embed) -->
+      <!-- CrazyGames -->
       <div class="ext">
         <strong>CrazyGames</strong>
-        <button onclick="loadInIframe('https://www.crazygames.com/')">Load in iframe</button>
+        <button onclick="openFullscreen('https://www.crazygames.com/')">Fullscreen</button>
       </div>
       
     </div>
@@ -207,18 +207,18 @@ function showPage(id) {
   document.getElementById(id).classList.add("active");
 }
 
-/* Load URL into iframe */
-function loadInIframe(url) {
+/* Load URL into iframe (fullscreen) */
+function openFullscreen(url) {
   document.getElementById("reader").src = url;
   document.getElementById("overlay").style.display = "block";
 }
 
-/* Open URL in new tab, fallback for sites blocking iframe */
+/* Open URL in new tab, fallback */
 function openExternal(url) {
   window.open(url, "_blank");
 }
 
-/* Close overlay on Escape key press */
+/* Close overlay with Escape key */
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     document.getElementById("overlay").style.display = "none";
