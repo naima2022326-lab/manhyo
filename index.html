@@ -3,129 +3,173 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Manhyo Reader - Extensions Only</title>
+<title>Manhyo Reader</title>
 
-<!-- Google Fonts for big title -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
-    background: radial-gradient(circle at top, #2a0f3f, #0b0b0b 70%);
-    font-family: "Courier New", monospace;
-    color: #fff;
-    overflow-x: hidden;
-    padding: 20px;
-    text-align: center;
-  }
+:root {
+  --accent: #8b5cf6;
+  --card: rgba(20,20,30,0.85);
+}
 
-  #title {
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 2.5rem;
-    letter-spacing: 4px;
-    margin-bottom: 15px;
-  }
+* { box-sizing: border-box; }
 
-  /* Sections: homepage, extensions only, no buttons */
-  .section {
-    display: none; /* hide all by default */
-  }
-  .section.active {
-    display: block; /* show active section */
-  }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #2b0f46, #070707 70%);
+  color: white;
+  font-family: "Courier New", monospace;
+  padding: 24px;
+  text-align: center;
+}
 
-  /* Homepage style */
-  #homepage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-  }
+/* Title */
+#title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2.6rem;
+  letter-spacing: 6px;
+  margin-bottom: 24px;
+}
+
+/* Sections */
+.section { display: none; }
+.section.active { display: block; }
+
+/* Password */
+input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+}
+
+button {
+  margin-top: 12px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: white;
+  font-weight: 600;
+}
+
+button:hover { opacity: 0.9; }
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+
+.card h3 {
+  font-family: "Space Grotesk", sans-serif;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+/* Fullscreen viewer */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: black;
+  z-index: 9999;
+}
+
+#reader {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
 </style>
 </head>
+
 <body>
 
 <h1 id="title">MANHYO</h1>
 
-<!-- Homepage with password prompt -->
+<!-- Password -->
 <div id="homepage" class="section active">
-  <h2 style="font-family:'Space Grotesk'; font-size:2rem;">Enter Password</h2>
-  <input type="password" id="passwordInput" placeholder="Password" />
+  <h2 style="font-family:'Space Grotesk'">Enter Password</h2>
+  <input type="password" id="passwordInput" placeholder="Password">
+  <br>
   <button onclick="verifyPassword()">Enter</button>
 </div>
 
-<!-- Extensions section, hidden initially -->
+<!-- Extensions -->
 <div id="extensions" class="section">
-  <h2>Extensions</h2>
-  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;">
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>Asurascans</h3>
-      <button onclick="openFullscreen('https://asurascans.com/')">Open in Viewer</button>
-    </div>
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>Watchparty</h3>
-      <button onclick="openFullscreen('https://www.watchparty.me/')">Open in Viewer</button>
-    </div>
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>Ezmanga</h3>
-      <button onclick="openFullscreen('https://ezmanga.org/')">Open in Viewer</button>
-    </div>
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>Comix</h3>
-      <button onclick="openFullscreen('https://comix.to/')">Open in Viewer</button>
-    </div>
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>Utoon</h3>
-      <button onclick="openFullscreen('https://utoon.net/')">Open in Viewer</button>
-    </div>
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>TikTok</h3>
-      <button onclick="openFullscreen('https://www.tiktok.com')">Open in Viewer</button>
-    </div>
-    <div style="background:rgba(30,30,30,0.85); border-radius:14px; padding:12px; width:180px; display:flex; flex-direction:column; align-items:center;">
-      <h3>Google</h3>
-      <button onclick="openFullscreen('https://www.google.com')">Open in Viewer</button>
-    </div>
+  <h2 style="font-family:'Space Grotesk'; margin-bottom:22px;">Extensions</h2>
+
+  <div class="grid">
+    <div class="card"><h3>AsuraScans</h3><button onclick="openSite('https://asuracomic.net')">Open</button></div>
+    <div class="card"><h3>Ezmanga</h3><button onclick="openSite('https://ezmanga.org')">Open</button></div>
+    <div class="card"><h3>Comix</h3><button onclick="openSite('https://comix.to')">Open</button></div>
+    <div class="card"><h3>Utoon</h3><button onclick="openSite('https://utoon.net')">Open</button></div>
+    <div class="card"><h3>WatchParty</h3><button onclick="openSite('https://www.watchparty.me')">Open</button></div>
+    <div class="card"><h3>YouTube</h3><button onclick="openYouTube()">Open</button></div>
   </div>
 </div>
 
-<!-- Overlay for fullscreen sites -->
-<div id="overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:9999;">
-  <iframe id="reader" style="width:100%; height:100%; border:none;"></iframe>
+<!-- Viewer -->
+<div id="overlay">
+  <iframe id="reader" allowfullscreen></iframe>
 </div>
 
 <script>
 function verifyPassword() {
   const pw = document.getElementById("passwordInput").value;
   if (pw === "D3r5t0n3") {
-    document.getElementById("homepage").style.display = "none";
-    document.getElementById("extensions").style.display = "block";
+    document.getElementById("homepage").classList.remove("active");
+    document.getElementById("extensions").classList.add("active");
   } else {
     alert("Wrong password");
   }
 }
 
-function openFullscreen(url) {
-  const iframe = document.getElementById("reader");
+function openSite(url) {
   const overlay = document.getElementById("overlay");
-  overlay.style.display = "block";
+  const iframe = document.getElementById("reader");
+
   iframe.src = "";
-  // Set a timeout for load error
-  const timeoutId = setTimeout(() => {
-    alert("Failed to load the site. It may be blocked or refusing connection.");
-    overlay.style.display = "none";
-  }, 15000);
-  
-  iframe.onload = () => {
-    clearTimeout(timeoutId);
-  };
+  overlay.style.display = "block";
   iframe.src = url;
+
+  // TRUE fullscreen
+  if (overlay.requestFullscreen) overlay.requestFullscreen();
+  else if (overlay.webkitRequestFullscreen) overlay.webkitRequestFullscreen();
+  else if (overlay.msRequestFullscreen) overlay.msRequestFullscreen();
 }
 
-// Close overlay on Escape
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+function openYouTube() {
+  openSite("https://www.youtube.com/embed?autoplay=1");
+}
+
+// Exit cleanup
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) {
     document.getElementById("overlay").style.display = "none";
+    document.getElementById("reader").src = "";
+  }
+});
+
+// ESC fallback
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && document.fullscreenElement) {
+    document.exitFullscreen();
   }
 });
 </script>
