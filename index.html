@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Manhyo Reader</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap"
+  rel="stylesheet"
+/>
 
 <style>
 body {
@@ -25,8 +28,13 @@ body {
   cursor: pointer;
 }
 
-.page { display: none; min-height: 100vh; }
-.page.active { display: flex; }
+.page {
+  display: none;
+  min-height: 100vh;
+}
+.page.active {
+  display: flex;
+}
 
 #login {
   flex-direction: column;
@@ -35,7 +43,10 @@ body {
   text-align: center;
 }
 
-#login h1 { letter-spacing: 14px; font-size: 3.2rem; }
+#login h1 {
+  letter-spacing: 14px;
+  font-size: 3.2rem;
+}
 
 input {
   padding: 14px;
@@ -55,7 +66,9 @@ button {
   color: white;
 }
 
-#extensions { width: 100%; }
+#extensions {
+  width: 100%;
+}
 
 .layout {
   display: grid;
@@ -63,7 +76,9 @@ button {
   min-height: 100vh;
 }
 
-.brand { padding: 60px; }
+.brand {
+  padding: 60px;
+}
 
 .ext-list {
   display: flex;
@@ -75,12 +90,14 @@ button {
 
 .ext {
   width: 360px;
-  background: rgba(30,30,30,0.85);
+  background: rgba(30, 30, 30, 0.85);
   border-radius: 14px;
   padding: 18px 22px;
 }
 
-.ext button { width: 100%; }
+.ext button {
+  width: 100%;
+}
 
 #overlay {
   position: fixed;
@@ -100,18 +117,17 @@ button {
 
 <body>
 
-<img id="site-logo" src="manhyo_logo.png" onclick="showPage('login')">
+<img id="site-logo" src="manhyo_logo.png" onclick="showPage('login')" />
 
 <div id="login" class="page active">
   <h1>MANHYO</h1>
   <p>Private reader hub</p>
-  <input type="password" id="password" placeholder="Password">
+  <input type="password" id="password" placeholder="Password" />
   <button onclick="login()">ENTER</button>
 </div>
 
 <div id="extensions" class="page">
   <div class="layout">
-
     <div class="brand">
       <h1>MANHYO</h1>
       <p>Select an extension to launch.</p>
@@ -125,7 +141,7 @@ button {
 
       <div class="ext">
         <strong>Watchparty</strong>
-        <button onclick="openFullscreen('https://https://www.watchparty.me//')">Fullscreen</button>
+        <button onclick="openFullscreen('https://www.watchparty.me/')">Fullscreen</button>
       </div>
 
       <div class="ext">
@@ -151,7 +167,6 @@ button {
         </button>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -175,12 +190,12 @@ function openFullscreen(url) {
   document.getElementById("overlay").style.display = "block";
 }
 
-/* ✅ TikTok-safe launcher */
+/* ✅ TikTok-safe launcher (opens in new tab) */
 function openExternal(url) {
-  window.open(url, "_blank", "noopener");
+  window.open(url, "_blank");
 }
 
-document.addEventListener("keydown", e => {
+document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     document.getElementById("overlay").style.display = "none";
     document.getElementById("reader").src = "";
@@ -188,7 +203,7 @@ document.addEventListener("keydown", e => {
 });
 
 function showPage(id) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 </script>
