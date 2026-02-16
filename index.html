@@ -37,12 +37,13 @@
         .section { display: none; }
         .section.active { display: block; }
 
-        /* Password */
+        /* Input and Button Styles */
         input {
             padding: 12px 14px;
             border-radius: 10px;
             border: none;
             font-size: 1rem;
+            margin-bottom: 12px;
         }
 
         button {
@@ -54,6 +55,7 @@
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: white;
             font-weight: 600;
+            transition: opacity 0.3s;
         }
 
         button:hover { opacity: 0.9; }
@@ -102,7 +104,7 @@
 
 <h1 id="title">MANHYO</h1>
 
-<!-- Password -->
+<!-- Password Section -->
 <div id="homepage" class="section active">
     <h2 style="font-family:'Space Grotesk'">Enter Password</h2>
     <input type="password" id="passwordInput" placeholder="Password">
@@ -110,8 +112,8 @@
     <button onclick="verifyPassword()">Enter</button>
 </div>
 
-<!-- Extensions -->
-<div id="extensions" class="section">
+<!-- Manhwas Section -->
+<div id="manhwas" class="section">
     <h2 style="font-family:'Space Grotesk'; margin-bottom:22px;">Manhwas</h2>
     <div class="grid">
         <div class="card"><h3>AsuraScans</h3><button onclick="openSite('https://asuracomic.net')">Open</button></div>
@@ -121,10 +123,13 @@
         <div class="card"><h3>WatchParty</h3><button onclick="openSite('https://www.watchparty.me')">Open</button></div>
         <div class="card"><h3>YouTube</h3><button onclick="openYouTube()">Open</button></div>
     </div>
+</div>
 
-    <h2 style="font-family:'Space Grotesk'; margin-top: 40px; margin-bottom:22px;">Games</h2>
+<!-- Games Section -->
+<div id="games" class="section">
+    <h2 style="font-family:'Space Grotesk'; margin-bottom:22px;">Games</h2>
     <div class="grid">
-        <div class="card"><h3>Roblox</h3><button onclick="openRoblox()">Open</button></div>
+        <div class="card"><h3>Roblox</h3><button onclick="openSite('https://www.roblox.com')">Open</button></div>
     </div>
 </div>
 
@@ -134,25 +139,18 @@
 </div>
 
 <script>
-    const passwords = ["D3r5t0n3", "incorrect", "try again", "mb", "TLDR", "Washing Machine"];
     let attempts = 0;
 
     function verifyPassword() {
         const pw = document.getElementById("passwordInput").value;
-        if (passwords.includes(pw)) {
-            if (pw === "D3r5t0n3") {
-                document.getElementById("homepage").classList.remove("active");
-                document.getElementById("extensions").classList.add("active");
-            } else {
-                attempts++;
-                if (attempts < 3) {
-                    alert("Incorrect password, try again.");
-                } else {
-                    alert("Too many attempts. Please refresh the page.");
-                }
-            }
+        if (pw === "mb" || pw === "TLDR" || pw === "Washing Machine") {
+            document.getElementById("homepage").classList.remove("active");
+            document.getElementById("manhwas").classList.add("active");
+        } else if (attempts < 2) {
+            attempts++;
+            alert("Incorrect password. Try again.");
         } else {
-            alert("Wrong password");
+            alert("Too many attempts. Please refresh the page.");
         }
     }
 
@@ -168,10 +166,6 @@
         if (overlay.requestFullscreen) overlay.requestFullscreen();
         else if (overlay.webkitRequestFullscreen) overlay.webkitRequestFullscreen();
         else if (overlay.msRequestFullscreen) overlay.msRequestFullscreen();
-    }
-
-    function openRoblox() {
-        openSite("https://www.roblox.com");
     }
 
     function openYouTube() {
