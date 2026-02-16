@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manhyo Reader</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --accent: #8b5cf6;
@@ -25,7 +23,6 @@
             text-align: center;
         }
 
-        /* Title */
         #title {
             font-family: "Space Grotesk", sans-serif;
             font-size: 2.6rem;
@@ -33,17 +30,14 @@
             margin-bottom: 24px;
         }
 
-        /* Sections */
         .section { display: none; }
         .section.active { display: block; }
 
-        /* Input and Button Styles */
         input {
             padding: 12px 14px;
             border-radius: 10px;
             border: none;
             font-size: 1rem;
-            margin-bottom: 12px;
         }
 
         button {
@@ -55,12 +49,10 @@
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: white;
             font-weight: 600;
-            transition: opacity 0.3s;
         }
 
         button:hover { opacity: 0.9; }
 
-        /* Grid */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -83,7 +75,6 @@
             font-size: 1.05rem;
         }
 
-        /* Fullscreen viewer */
         #overlay {
             display: none;
             position: fixed;
@@ -133,7 +124,7 @@
     </div>
 </div>
 
-<!-- Viewer -->
+<!-- Fullscreen Viewer -->
 <div id="overlay">
     <iframe id="reader" allowfullscreen></iframe>
 </div>
@@ -143,7 +134,7 @@
 
     function verifyPassword() {
         const pw = document.getElementById("passwordInput").value;
-        if (pw === "mb" || pw === "TLDR" || pw === "Washing Machine") {
+        if (pw === "D3r5t0n3") {
             document.getElementById("homepage").classList.remove("active");
             document.getElementById("manhwas").classList.add("active");
         } else if (attempts < 2) {
@@ -162,7 +153,6 @@
         overlay.style.display = "block";
         iframe.src = url;
 
-        // TRUE fullscreen
         if (overlay.requestFullscreen) overlay.requestFullscreen();
         else if (overlay.webkitRequestFullscreen) overlay.webkitRequestFullscreen();
         else if (overlay.msRequestFullscreen) overlay.msRequestFullscreen();
@@ -172,7 +162,6 @@
         openSite("https://www.youtube.com/embed?autoplay=1");
     }
 
-    // Exit cleanup
     document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
             document.getElementById("overlay").style.display = "none";
@@ -180,7 +169,6 @@
         }
     });
 
-    // ESC fallback
     document.addEventListener("keydown", e => {
         if (e.key === "Escape" && document.fullscreenElement) {
             document.exitFullscreen();
