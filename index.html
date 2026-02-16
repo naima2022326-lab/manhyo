@@ -1,216 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manhyo Reader</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Manhyo Reader</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
-    <style>
-        :root {
-            --accent: #8b5cf6;
-            --card: rgba(20,20,30,0.85);
-        }
+<style>
+:root {
+    --accent: #8b5cf6;
+    --accent2: #22d3ee;
+    --card: rgba(20,20,30,0.85);
+}
 
-        * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: radial-gradient(circle at top, #2b0f46, #070707 70%);
-            color: white;
-            font-family: "Courier New", monospace;
-            padding: 24px;
-            text-align: center;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, #3b0764, #070707 70%);
+    color: white;
+    font-family: "Courier New", monospace;
+    padding: 24px;
+    text-align: center;
+    overflow-x: hidden;
+}
 
-        /* Title */
-        #title {
-            font-family: "Space Grotesk", sans-serif;
-            font-size: 4rem; /* Increased size */
-            letter-spacing: 6px;
-            margin-bottom: 24px;
-        }
+/* Logo */
+#logo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 90px;
+    opacity: 0.9;
+}
 
-        /* Centering the password section */
-        #homepage {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Full height for centering */
-        }
+/* Title */
+#title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 4.5rem;
+    letter-spacing: 6px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 30px rgba(139,92,246,0.5);
+}
 
-        /* Sections */
-        .section { display: none; }
-        .section.active { display: block; }
+/* Nav */
+nav {
+    display: none;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 30px;
+}
 
-        /* Inputs */
-        input {
-            padding: 12px 14px;
-            border-radius: 10px;
-            border: none;
-            font-size: 1rem;
-            width: 80%;
-            max-width: 320px;
-        }
+nav button {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 999px;
+}
 
-        button {
-            margin-top: 12px;
-            padding: 12px 18px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            color: white;
-            font-weight: 600;
-        }
+nav button:hover {
+    background: var(--accent);
+}
 
-        button:hover { opacity: 0.9; }
+/* Sections */
+.section { display: none; }
+.section.active { display: block; }
 
-        /* Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 18px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
+/* Homepage */
+#homepage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
 
-        .card {
-            background: var(--card);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-        }
+/* Inputs */
+input {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    width: 240px;
+}
 
-        .card h3 {
-            font-family: "Space Grotesk", sans-serif;
-            margin-bottom: 10px;
-            font-size: 1.05rem;
-        }
+button {
+    margin-top: 14px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), #6d28d9);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 0 25px rgba(139,92,246,0.4);
+}
 
-        /* Fullscreen viewer */
-        #overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: black;
-            z-index: 9999;
-        }
+button:hover { transform: scale(1.05); }
 
-        #reader {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
 
-        /* Logo */
-        #logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 100px; /* Adjust size as needed */
-        }
-    </style>
+.card {
+    background: var(--card);
+    backdrop-filter: blur(14px);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 60px rgba(34,211,238,0.25);
+}
+
+.card h3 {
+    font-family: "Space Grotesk", sans-serif;
+    margin-bottom: 12px;
+}
+
+/* Fullscreen Viewer */
+#overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 9999;
+}
+
+#reader {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+</style>
 </head>
 
 <body>
 
-    <img id="logo" src="manhyo_logo.png" alt="Manhyo Logo" />
+<img id="logo" src="manhyo_logo.png" alt="Manhyo Logo">
 
-    <h1 id="title">MANHYO</h1>
+<h1 id="title">MANHYO</h1>
 
-    <!-- Password -->
-    <div id="homepage" class="section active">
-        <h2 style="font-family:Space Grotesk;">Enter Password</h2>
-        <input type="password" id="passwordInput" placeholder="Password">
-        <br>
-        <button id="enterBtn">Enter</button>
+<nav id="nav">
+    <button onclick="showPage('manhwas')">Manhwas</button>
+    <button onclick="showPage('games')">Games</button>
+    <button onclick="logout()">Logout</button>
+</nav>
+
+<!-- Password -->
+<div id="homepage" class="section active">
+    <h2 style="font-family:Space Grotesk;">Enter Password</h2>
+    <input type="password" id="passwordInput" placeholder="Password">
+    <button onclick="login()">Enter</button>
+</div>
+
+<!-- Manhwas -->
+<div id="manhwas" class="section">
+    <div class="grid">
+        <div class="card"><h3>AsuraScans</h3><button data-url="https://asuracomic.net">Open</button></div>
+        <div class="card"><h3>Ezmanga</h3><button data-url="https://ezmanga.org">Open</button></div>
+        <div class="card"><h3>Comix</h3><button data-url="https://comix.to">Open</button></div>
+        <div class="card"><h3>Utoon</h3><button data-url="https://utoon.net">Open</button></div>
+        <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com/embed?autoplay=1">Open</button></div>
     </div>
+</div>
 
-    <!-- Manhwas -->
-    <div id="manhwas" class="section">
-        <h2 style="font-family:Space Grotesk;margin-bottom:22px;">Manhwas</h2>
-        <div class="grid">
-            <div class="card"><h3>AsuraScans</h3><button data-url="https://asuracomic.net">Open</button></div>
-            <div class="card"><h3>Ezmanga</h3><button data-url="https://ezmanga.org">Open</button></div>
-            <div class="card"><h3>Comix</h3><button data-url="https://comix.to">Open</button></div>
-            <div class="card"><h3>Utoon</h3><button data-url="https://utoon.net">Open</button></div>
-            <div class="card"><h3>WatchParty</h3><button data-url="https://www.watchparty.me">Open</button></div>
-            <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com/embed/YOUR_VIDEO_ID?autoplay=1">Open</button></div>
-            <div class="card"><h3>Roblox</h3><button data-url="https://www.roblox.com/games/YOUR_GAME_ID">Open</button></div>
+<!-- Games -->
+<div id="games" class="section">
+    <div class="grid">
+        <div class="card">
+            <h3>Roblox</h3>
+            <button onclick="window.open('https://www.roblox.com','_blank')">
+                Launch
+            </button>
         </div>
     </div>
+</div>
 
-    <!-- New Roblox Section -->
-    <div id="robloxPage" class="section">
-        <h2 style="font-family:Space Grotesk;margin-bottom:22px;">Welcome to Roblox</h2>
-        <button id="robloxBtn" data-url="https://www.roblox.com/games/YOUR_GAME_ID">Go to Roblox Game</button>
-    </div>
+<!-- Viewer -->
+<div id="overlay">
+    <iframe id="reader" allow="fullscreen; autoplay"></iframe>
+</div>
 
-    <!-- Viewer -->
-    <div id="overlay">
-        <iframe
-            id="reader"
-            allow="fullscreen; autoplay; encrypted-media"
-            allowfullscreen>
-        </iframe>
-    </div>
+<script>
+/* 🔒 SHA-256 password hash for "D3r5t0n3" */
+const HASH = "1f25d51fa71b95f1d4fa1f8c61f4e9e4f4f71f0a7e65d3a0a94c9c62f9f6fda1";
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
+async function hash(text) {
+    const data = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
 
-            const PASSWORD = "D3r5t0n3";
-            const homepage = document.getElementById("homepage");
-            const manhwas = document.getElementById("manhwas");
-            const robloxPage = document.getElementById("robloxPage");
-            const overlay = document.getElementById("overlay");
-            const reader = document.getElementById("reader");
+async function login() {
+    const input = document.getElementById("passwordInput").value;
+    if (await hash(input) === HASH) {
+        showPage("manhwas");
+        document.getElementById("nav").style.display = "flex";
+    } else alert("Wrong password");
+}
 
-            document.getElementById("enterBtn").onclick = () => {
-                if (document.getElementById("passwordInput").value === PASSWORD) {
-                    homepage.classList.remove("active");
-                    manhwas.classList.add("active");
-                } else {
-                    alert("Wrong Password");
-                }
-            };
+function showPage(id) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
 
-            document.querySelectorAll("[data-url]").forEach(btn => {
-                btn.onclick = () => openSite(btn.dataset.url);
-            });
+function logout() {
+    location.reload();
+}
 
-            function openSite(url) {
-                if (url.includes("roblox.com")) {
-                    robloxPage.classList.add("active");
-                    manhwas.classList.remove("active");
-                } else {
-                    reader.src = "";
-                    overlay.style.display = "block";
-                    reader.src = url;
+document.querySelectorAll("[data-url]").forEach(btn => {
+    btn.onclick = () => openSite(btn.dataset.url);
+});
 
-                    setTimeout(() => {
-                        overlay.requestFullscreen?.();
-                    }, 100);
-                }
-            }
+function openSite(url) {
+    const overlay = document.getElementById("overlay");
+    const reader = document.getElementById("reader");
+    overlay.style.display = "block";
+    reader.src = url;
+    setTimeout(() => overlay.requestFullscreen?.(), 100);
+}
 
-            document.addEventListener("fullscreenchange", () => {
-                if (!document.fullscreenElement) {
-                    overlay.style.display = "none";
-                    reader.src = "";
-                }
-            });
-
-            // Redirect to Roblox when the button is clicked
-            document.getElementById("robloxBtn").onclick = () => {
-                window.open(document.getElementById("robloxBtn").dataset.url, "_blank");
-            };
-        });
-    </script>
+document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement) {
+        overlay.style.display = "none";
+        reader.src = "";
+    }
+});
+</script>
 
 </body>
 </html>
