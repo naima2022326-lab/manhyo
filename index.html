@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -121,7 +121,8 @@ button:hover { opacity: 0.9; }
         <div class="card"><h3>Comix</h3><button data-url="https://comix.to">Open</button></div>
         <div class="card"><h3>Utoon</h3><button data-url="https://utoon.net">Open</button></div>
         <div class="card"><h3>WatchParty</h3><button data-url="https://www.watchparty.me">Open</button></div>
-        <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com/embed?autoplay=1">Open</button></div>
+        <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com/embed/YOUR_VIDEO_ID?autoplay=1">Open</button></div>
+        <div class="card"><h3>Roblox</h3><button data-url="https://www.roblox.com/games/YOUR_GAME_ID">Open</button></div>
     </div>
 </div>
 
@@ -157,13 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function openSite(url) {
-        reader.src = "";
-        overlay.style.display = "block";
-        reader.src = url;
+        if (url.includes("roblox.com")) {
+            window.open(url, "_blank"); // Open Roblox in a new tab
+        } else {
+            reader.src = "";
+            overlay.style.display = "block";
+            reader.src = url;
 
-        setTimeout(() => {
-            overlay.requestFullscreen?.();
-        }, 100);
+            setTimeout(() => {
+                overlay.requestFullscreen?.();
+            }, 100);
+        }
     }
 
     document.addEventListener("fullscreenchange", () => {
