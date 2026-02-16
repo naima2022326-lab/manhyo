@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manhyo Reader</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --accent: #8b5cf6;
@@ -23,21 +25,26 @@
             text-align: center;
         }
 
+        /* Title */
         #title {
             font-family: "Space Grotesk", sans-serif;
-            font-size: 2.6rem;
+            font-size: 3rem; /* Increased size for better visibility */
             letter-spacing: 6px;
             margin-bottom: 24px;
         }
 
+        /* Sections */
         .section { display: none; }
         .section.active { display: block; }
 
+        /* Password */
         input {
             padding: 12px 14px;
             border-radius: 10px;
             border: none;
             font-size: 1rem;
+            width: 80%; /* Centering input */
+            margin: 0 auto;
         }
 
         button {
@@ -53,6 +60,7 @@
 
         button:hover { opacity: 0.9; }
 
+        /* Grid */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -75,6 +83,7 @@
             font-size: 1.05rem;
         }
 
+        /* Fullscreen viewer */
         #overlay {
             display: none;
             position: fixed;
@@ -95,9 +104,9 @@
 
 <h1 id="title">MANHYO</h1>
 
-<!-- Password Section -->
+<!-- Password -->
 <div id="homepage" class="section active">
-    <h2 style="font-family:'Space Grotesk'">Enter Password</h2>
+    <h2 style="font-family:'Space Grotesk'; font-size: 2rem;">Enter Password</h2>
     <input type="password" id="passwordInput" placeholder="Password">
     <br>
     <button onclick="verifyPassword()">Enter</button>
@@ -121,27 +130,27 @@
     <h2 style="font-family:'Space Grotesk'; margin-bottom:22px;">Games</h2>
     <div class="grid">
         <div class="card"><h3>Roblox</h3><button onclick="openSite('https://www.roblox.com')">Open</button></div>
+        <!-- Add more games here -->
     </div>
 </div>
 
-<!-- Fullscreen Viewer -->
+<!-- Viewer -->
 <div id="overlay">
     <iframe id="reader" allowfullscreen></iframe>
 </div>
 
 <script>
-    let attempts = 0;
-
     function verifyPassword() {
         const pw = document.getElementById("passwordInput").value;
         if (pw === "D3r5t0n3") {
             document.getElementById("homepage").classList.remove("active");
             document.getElementById("manhwas").classList.add("active");
-        } else if (attempts < 2) {
-            attempts++;
-            alert("Incorrect password. Try again.");
+        } else if (pw === "incorrect") {
+            alert("Incorrect password mothfucka. Please try again ya dumbass.");
+        } else if (pw === "try again") {
+            alert("I can't believe you fuking don't know the password, i'mma laugh at your face.");
         } else {
-            alert("Too many attempts. Please refresh the page.");
+            alert("Wrong password");
         }
     }
 
@@ -153,6 +162,7 @@
         overlay.style.display = "block";
         iframe.src = url;
 
+        // TRUE fullscreen
         if (overlay.requestFullscreen) overlay.requestFullscreen();
         else if (overlay.webkitRequestFullscreen) overlay.webkitRequestFullscreen();
         else if (overlay.msRequestFullscreen) overlay.msRequestFullscreen();
@@ -162,6 +172,7 @@
         openSite("https://www.youtube.com/embed?autoplay=1");
     }
 
+    // Exit cleanup
     document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
             document.getElementById("overlay").style.display = "none";
@@ -169,6 +180,7 @@
         }
     });
 
+    // ESC fallback
     document.addEventListener("keydown", e => {
         if (e.key === "Escape" && document.fullscreenElement) {
             document.exitFullscreen();
