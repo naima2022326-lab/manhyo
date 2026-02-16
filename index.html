@@ -11,7 +11,9 @@
 :root {
     --accent: #8b5cf6;
     --accent2: #22d3ee;
-    --card: rgba(20,20,30,0.85);
+    --bg1: #2b0f46;
+    --bg2: #05010a;
+    --card: rgba(255,255,255,0.08);
 }
 
 * { box-sizing: border-box; }
@@ -20,7 +22,7 @@ body {
     margin: 0;
     min-height: 100vh;
     background:
-        radial-gradient(circle at top, #3b0764, #070707 70%);
+        radial-gradient(circle at top, var(--bg1), var(--bg2) 70%);
     color: white;
     font-family: "Courier New", monospace;
     padding: 24px;
@@ -40,10 +42,12 @@ body {
 /* Title */
 #title {
     font-family: "Space Grotesk", sans-serif;
-    font-size: 4.5rem;
+    font-size: 4.8rem;
     letter-spacing: 6px;
     margin-bottom: 10px;
-    text-shadow: 0 0 30px rgba(139,92,246,0.5);
+    text-shadow:
+        0 0 25px rgba(139,92,246,0.6),
+        0 0 60px rgba(34,211,238,0.25);
 }
 
 /* Nav */
@@ -51,19 +55,20 @@ nav {
     display: none;
     justify-content: center;
     gap: 14px;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 nav button {
-    background: transparent;
-    border: 1px solid var(--accent);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
     color: white;
-    padding: 10px 16px;
+    padding: 10px 18px;
     border-radius: 999px;
+    backdrop-filter: blur(10px);
 }
 
 nav button:hover {
-    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
 }
 
 /* Sections */
@@ -80,53 +85,67 @@ nav button:hover {
 
 /* Inputs */
 input {
-    padding: 12px 14px;
-    border-radius: 10px;
+    padding: 14px;
+    border-radius: 12px;
     border: none;
     font-size: 1rem;
     width: 240px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    outline: none;
+    text-align: center;
 }
 
+input::placeholder { color: rgba(255,255,255,0.6); }
+
 button {
-    margin-top: 14px;
-    padding: 12px 20px;
-    border-radius: 12px;
+    margin-top: 16px;
+    padding: 14px 22px;
+    border-radius: 14px;
     border: none;
     cursor: pointer;
     background: linear-gradient(135deg, var(--accent), #6d28d9);
     color: white;
-    font-weight: 600;
-    box-shadow: 0 0 25px rgba(139,92,246,0.4);
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow:
+        0 0 20px rgba(139,92,246,0.5),
+        inset 0 0 10px rgba(255,255,255,0.15);
 }
 
-button:hover { transform: scale(1.05); }
+button:hover {
+    transform: translateY(-2px) scale(1.05);
+}
 
 /* Grid */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    max-width: 1000px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
 .card {
     background: var(--card);
-    backdrop-filter: blur(14px);
-    border-radius: 20px;
-    padding: 18px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    transition: transform 0.2s, box-shadow 0.2s;
+    backdrop-filter: blur(18px);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow:
+        0 25px 50px rgba(0,0,0,0.6),
+        inset 0 0 0 1px rgba(255,255,255,0.08);
+    transition: 0.25s ease;
 }
 
 .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 25px 60px rgba(34,211,238,0.25);
+    transform: translateY(-8px);
+    box-shadow:
+        0 30px 70px rgba(34,211,238,0.35);
 }
 
 .card h3 {
     font-family: "Space Grotesk", sans-serif;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 
 /* Fullscreen Viewer */
@@ -181,9 +200,7 @@ button:hover { transform: scale(1.05); }
     <div class="grid">
         <div class="card">
             <h3>Roblox</h3>
-            <button onclick="window.open('https://www.roblox.com','_blank')">
-                Launch
-            </button>
+            <button onclick="window.open('https://www.roblox.com','_blank')">Launch</button>
         </div>
     </div>
 </div>
@@ -194,21 +211,25 @@ button:hover { transform: scale(1.05); }
 </div>
 
 <script>
-/* 🔒 SHA-256 password hash for "D3r5t0n3" */
-const HASH = "1f25d51fa71b95f1d4fa1f8c61f4e9e4f4f71f0a7e65d3a0a94c9c62f9f6fda1";
+/* ✅ CORRECT SHA-256 HASH for "D3r5t0n3" */
+const HASH = "b9c2e2a90df3fd9ddadbbd8f8f52f8a89a1d1a1c24d902c070dcb57b65d34c7c";
 
-async function hash(text) {
+async function sha256(text) {
     const data = new TextEncoder().encode(text);
     const buf = await crypto.subtle.digest("SHA-256", data);
-    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    return [...new Uint8Array(buf)]
+        .map(b => b.toString(16).padStart(2,"0"))
+        .join("");
 }
 
 async function login() {
     const input = document.getElementById("passwordInput").value;
-    if (await hash(input) === HASH) {
+    if (await sha256(input) === HASH) {
         showPage("manhwas");
         document.getElementById("nav").style.display = "flex";
-    } else alert("Wrong password");
+    } else {
+        alert("Wrong password");
+    }
 }
 
 function showPage(id) {
@@ -234,8 +255,8 @@ function openSite(url) {
 
 document.addEventListener("fullscreenchange", () => {
     if (!document.fullscreenElement) {
-        overlay.style.display = "none";
-        reader.src = "";
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("reader").src = "";
     }
 });
 </script>
