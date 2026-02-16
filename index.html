@@ -28,8 +28,9 @@ body{
 
 #title{
   font-family:"Space Grotesk",sans-serif;
-  font-size:4.6rem;
+  font-size:4.5rem;
   letter-spacing:6px;
+  margin-bottom:20px;
   text-shadow:
     0 0 30px rgba(139,92,246,.7),
     0 0 80px rgba(34,211,238,.3);
@@ -54,11 +55,12 @@ input{
   background:rgba(255,255,255,.15);
   color:white;
   text-align:center;
+  font-size:16px;
 }
 
 button{
   margin-top:16px;
-  padding:14px 24px;
+  padding:14px 26px;
   border-radius:16px;
   border:none;
   cursor:pointer;
@@ -112,6 +114,7 @@ nav button{
   margin-bottom:14px;
 }
 
+/* OVERLAY */
 #overlay{
   display:none;
   position:fixed;
@@ -133,9 +136,9 @@ nav button{
 <h1 id="title">MANHYO</h1>
 
 <nav id="nav">
-  <button data-page="manhwas">Manhwas</button>
-  <button data-page="games">Games</button>
-  <button id="logout">Logout</button>
+  <button onclick="showPage('manhwas')">Manhwas</button>
+  <button onclick="showPage('games')">Games</button>
+  <button onclick="logout()">Logout</button>
 </nav>
 
 <!-- PASSWORD -->
@@ -148,10 +151,22 @@ nav button{
 <!-- MANHWAS -->
 <div id="manhwas" class="section">
   <div class="grid">
-    <div class="card"><h3>AsuraScans</h3><button data-url="https://asuracomic.net">Open</button></div>
-    <div class="card"><h3>Ezmanga</h3><button data-url="https://ezmanga.org">Open</button></div>
-    <div class="card"><h3>Comix</h3><button data-url="https://comix.to">Open</button></div>
-    <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com">Open</button></div>
+    <div class="card">
+      <h3>AsuraScans</h3>
+      <button data-url="https://asuracomic.net">Open</button>
+    </div>
+    <div class="card">
+      <h3>Ezmanga</h3>
+      <button data-url="https://ezmanga.org">Open</button>
+    </div>
+    <div class="card">
+      <h3>Comix</h3>
+      <button data-url="https://comix.to">Open</button>
+    </div>
+    <div class="card">
+      <h3>YouTube</h3>
+      <button data-url="https://www.youtube.com/embed?autoplay=1">Open</button>
+    </div>
   </div>
 </div>
 
@@ -160,64 +175,65 @@ nav button{
   <div class="grid">
     <div class="card">
       <h3>Roblox</h3>
-      <button data-external="https://www.roblox.com">Launch</button>
+      <button onclick="window.open('https://www.roblox.com','_blank')">Launch</button>
     </div>
   </div>
 </div>
 
 <!-- VIEWER -->
-<div id="overlay">
-  <iframe id="reader"></iframe>
+<div id="overlay" onclick="closeOverlay()">
+  <iframe id="reader" allow="fullscreen; autoplay"></iframe>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+/* ELEMENTS */
+const overlay = document.getElementById("overlay");
+const reader  = document.getElementById("reader");
+const nav     = document.getElementById("nav");
 
-  const PASSWORD = "D3r5t0n3";
+/* PASSWORD */
+const secret = atob("RDNyNXQwbjM="); // D3r5t0n3
 
-  const homepage = document.getElementById("homepage");
-  const nav = document.getElementById("nav");
-  const overlay = document.getElementById("overlay");
-  const reader = document.getElementById("reader");
+document.getElementById("loginBtn").addEventListener("click", login);
 
-  document.getElementById("loginBtn").onclick = () => {
-    if (document.getElementById("pw").value === PASSWORD) {
-      homepage.classList.remove("active");
-      nav.style.display = "flex";
-      showPage("manhwas");
-    } else {
-      alert("Wrong password");
-    }
-  };
-
-  document.querySelectorAll("[data-page]").forEach(btn => {
-    btn.onclick = () => showPage(btn.dataset.page);
-  });
-
-  document.getElementById("logout").onclick = () => location.reload();
-
-  document.querySelectorAll("[data-url]").forEach(btn => {
-    btn.onclick = () => {
-      overlay.style.display = "block";
-      reader.src = btn.dataset.url;
-    };
-  });
-
-  document.querySelectorAll("[data-external]").forEach(btn => {
-    btn.onclick = () => window.open(btn.dataset.external, "_blank");
-  });
-
-  overlay.onclick = () => {
-    overlay.style.display = "none";
-    reader.src = "";
-  };
-
-  function showPage(id){
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+function login(){
+  if(document.getElementById("pw").value === secret){
+    document.getElementById("homepage").remove();
+    nav.style.display = "flex";
+    showPage("manhwas");
+  } else {
+    alert("Wrong password");
   }
+}
 
+function showPage(id){
+  document.querySelectorAll(".section").forEach(s=>{
+    if(s.id !== "homepage") s.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+}
+
+/* OPEN EXTENSION */
+document.addEventListener("click",e=>{
+  const btn = e.target.closest("[data-url]");
+  if(!btn) return;
+  openSite(btn.dataset.url);
 });
+
+function openSite(url){
+  overlay.style.display = "block";
+  reader.src = url;
+}
+
+/* CLOSE */
+function closeOverlay(){
+  overlay.style.display="none";
+  reader.src="";
+}
+
+function logout(){
+  location.reload();
+}
 </script>
 
 </body>
