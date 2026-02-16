@@ -133,16 +133,16 @@ nav button{
 <h1 id="title">MANHYO</h1>
 
 <nav id="nav">
-  <button onclick="showPage('manhwas')">Manhwas</button>
-  <button onclick="showPage('games')">Games</button>
-  <button onclick="logout()">Logout</button>
+  <button data-page="manhwas">Manhwas</button>
+  <button data-page="games">Games</button>
+  <button id="logout">Logout</button>
 </nav>
 
 <!-- PASSWORD -->
 <div id="homepage" class="section active">
   <h2 style="font-family:Space Grotesk">Enter Password</h2>
   <input type="password" id="pw" placeholder="Password">
-  <button onclick="login()">Enter</button>
+  <button id="loginBtn">Enter</button>
 </div>
 
 <!-- MANHWAS -->
@@ -151,7 +151,7 @@ nav button{
     <div class="card"><h3>AsuraScans</h3><button data-url="https://asuracomic.net">Open</button></div>
     <div class="card"><h3>Ezmanga</h3><button data-url="https://ezmanga.org">Open</button></div>
     <div class="card"><h3>Comix</h3><button data-url="https://comix.to">Open</button></div>
-    <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com/embed?autoplay=1">Open</button></div>
+    <div class="card"><h3>YouTube</h3><button data-url="https://www.youtube.com">Open</button></div>
   </div>
 </div>
 
@@ -160,62 +160,63 @@ nav button{
   <div class="grid">
     <div class="card">
       <h3>Roblox</h3>
-      <button onclick="window.open('https://www.roblox.com','_blank')">Launch</button>
+      <button data-external="https://www.roblox.com">Launch</button>
     </div>
   </div>
 </div>
 
 <!-- VIEWER -->
 <div id="overlay">
-  <iframe id="reader" allow="fullscreen; autoplay"></iframe>
+  <iframe id="reader"></iframe>
 </div>
 
 <script>
-/* ELEMENTS */
-const overlay = document.getElementById("overlay");
-const reader = document.getElementById("reader");
+document.addEventListener("DOMContentLoaded", () => {
 
-/* PASSWORD */
-const secret = atob("RDNyNXQwbjM="); // D3r5t0n3
+  const PASSWORD = "D3r5t0n3";
 
-function login(){
-  if(document.getElementById("pw").value === secret){
-    document.getElementById("homepage").classList.remove("active");
-    document.getElementById("nav").style.display = "flex";
-    showPage("manhwas");
-  } else {
-    alert("Wrong password");
-  }
-}
+  const homepage = document.getElementById("homepage");
+  const nav = document.getElementById("nav");
+  const overlay = document.getElementById("overlay");
+  const reader = document.getElementById("reader");
 
-function showPage(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
+  document.getElementById("loginBtn").onclick = () => {
+    if (document.getElementById("pw").value === PASSWORD) {
+      homepage.classList.remove("active");
+      nav.style.display = "flex";
+      showPage("manhwas");
+    } else {
+      alert("Wrong password");
+    }
+  };
 
-function logout(){
-  location.reload();
-}
-
-/* BUTTONS */
-document.querySelectorAll("[data-url]").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    openSite(btn.dataset.url);
+  document.querySelectorAll("[data-page]").forEach(btn => {
+    btn.onclick = () => showPage(btn.dataset.page);
   });
-});
 
-function openSite(url){
-  overlay.style.display="block";
-  reader.src=url;
-  setTimeout(()=>overlay.requestFullscreen?.(),100);
-}
+  document.getElementById("logout").onclick = () => location.reload();
 
-/* EXIT FULLSCREEN */
-document.addEventListener("fullscreenchange",()=>{
-  if(!document.fullscreenElement){
-    overlay.style.display="none";
-    reader.src="";
+  document.querySelectorAll("[data-url]").forEach(btn => {
+    btn.onclick = () => {
+      overlay.style.display = "block";
+      reader.src = btn.dataset.url;
+    };
+  });
+
+  document.querySelectorAll("[data-external]").forEach(btn => {
+    btn.onclick = () => window.open(btn.dataset.external, "_blank");
+  });
+
+  overlay.onclick = () => {
+    overlay.style.display = "none";
+    reader.src = "";
+  };
+
+  function showPage(id){
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
   }
+
 });
 </script>
 
