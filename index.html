@@ -129,19 +129,6 @@ button{
   margin-bottom:6px;
 }
 
-/* ---------------- LIBRARY ---------------- */
-
-#library{
-  margin-top:50px;
-}
-
-.lib-item{
-  background:var(--glass);
-  padding:14px;
-  border-radius:14px;
-  margin-bottom:12px;
-}
-
 /* ---------------- IFRAME ---------------- */
 
 #overlay{
@@ -167,7 +154,7 @@ button{
   <div class="login-box">
     <div id="title">MANHYO</div>
     <p>Read manhwa & manga in one clean place.</p>
-    <input type="password" id="pw" placeholder="Password">
+    <input type="password" id="pw" placeholder="Password" autocomplete="off">
     <br>
     <button onclick="login()">Enter</button>
   </div>
@@ -180,29 +167,23 @@ button{
       <h1>MANHYO</h1>
       <p>
         Manhyo is a private reader hub that lets you open your favorite
-        manhwa and manga sites in fullscreen, remember what you’re reading,
-        and continue anytime without losing your place.
+        manhwa and manga sites in fullscreen without distractions.
       </p>
-
-      <div id="library">
-        <h2>Library</h2>
-        <div id="libraryList"></div>
-      </div>
     </div>
 
     <div class="right">
       <div class="grid">
-        <div class="card" onclick="openSite('https://asuracomic.net','AsuraScans')">
+        <div class="card" data-url="https://asuracomic.net">
           <h3>AsuraScans</h3>
           <p>Action & fantasy manhwa</p>
         </div>
 
-        <div class="card" onclick="openSite('https://ezmanga.org','Ezmanga')">
+        <div class="card" data-url="https://ezmanga.org">
           <h3>Ezmanga</h3>
           <p>Manga & manhwa reader</p>
         </div>
 
-        <div class="card" onclick="openSite('https://comix.to','Comix')">
+        <div class="card" data-url="https://comix.to">
           <h3>Comix</h3>
           <p>Modern manga platform</p>
         </div>
@@ -217,67 +198,62 @@ button{
 </div>
 
 <script>
-/* PASSWORD */
 const secret = "D3r5t0n3";
 
-if(localStorage.getItem("logged")==="yes"){
+const loginEl = document.getElementById("login");
+const appEl = document.getElementById("app");
+const pw = document.getElementById("pw");
+const overlay = document.getElementById("overlay");
+const reader = document.getElementById("reader");
+
+/* AUTO LOGIN */
+if (localStorage.getItem("logged") === "yes") {
   showApp();
 }
 
-function login(){
-  if(pw.value === secret){
-    localStorage.setItem("logged","yes");
+/* LOGIN */
+function login() {
+  if (pw.value === secret) {
+    localStorage.setItem("logged", "yes");
     showApp();
   } else {
     alert("Incorrect password");
   }
 }
 
-function showApp(){
-  login.style.display="none";
-  app.style.display="block";
-  renderLibrary();
+/* ENTER KEY SUPPORT */
+pw.addEventListener("keydown", e => {
+  if (e.key === "Enter") login();
+});
+
+/* SHOW APP */
+function showApp() {
+  loginEl.style.display = "none";
+  appEl.style.display = "block";
 }
 
-/* OPEN SITE */
-function openSite(url,site){
-  const title = prompt("What are you reading?");
-  if(!title) return;
-  const chapter = prompt("Chapter?");
-  saveReading(site,title,chapter);
+/* EXTENSIONS → FULLSCREEN */
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("click", () => {
+    overlay.style.display = "block";
+    reader.src = card.dataset.url;
 
-  overlay.style.display="block";
-  reader.src=url;
-  setTimeout(()=>overlay.requestFullscreen?.(),100);
-}
+    setTimeout(() => {
+      overlay.requestFullscreen?.();
+    }, 50);
+  });
+});
 
-/* FULLSCREEN EXIT */
-document.addEventListener("fullscreenchange",()=>{
-  if(!document.fullscreenElement){
-    overlay.style.display="none";
-    reader.src="";
+/* EXIT FULLSCREEN */
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) {
+    overlay.style.display = "none";
+    reader.src = "";
   }
 });
 
-/* LIBRARY */
-function saveReading(site,title,chapter){
-  let lib = JSON.parse(localStorage.getItem("library")||"[]");
-  lib.unshift({site,title,chapter,date:new Date().toLocaleString()});
-  localStorage.setItem("library",JSON.stringify(lib));
-}
-
-function renderLibrary(){
-  const list=document.getElementById("libraryList");
-  list.innerHTML="";
-  const lib=JSON.parse(localStorage.getItem("library")||"[]");
-  lib.forEach(i=>{
-    list.innerHTML+=`
-      <div class="lib-item">
-        <strong>${i.title}</strong><br>
-        ${i.site} — ${i.chapter}
-      </div>`;
-  });
-}
+/* AUTO FOCUS */
+pw.focus();
 </script>
 
 </body>
