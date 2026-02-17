@@ -187,11 +187,6 @@ button{
           <h3>Comix</h3>
           <p>Modern manga platform</p>
         </div>
-
-        <div class="card" data-url="https://old.reddit.com">
-          <h3>Reddit</h3>
-          <p>Communities & discussions</p>
-        </div>
       </div>
     </div>
   </div>
@@ -251,30 +246,28 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-/* 🔥 SMOOTH SCROLL FIX */
+/* 🔧 COMIX PAGE-FLIP FIX */
 window.addEventListener("keydown", e => {
   if (!document.fullscreenElement) return;
 
+  const url = reader.src || "";
+
+  // Block Comix page flipping
+  if (url.includes("comix.to")) {
+    const blockKeys = ["ArrowDown","ArrowUp","PageDown","PageUp"," "];
+    if (blockKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+    return;
+  }
+
+  // Smooth scroll for other sites (best effort)
   const keys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp"];
   if (!keys.includes(e.key)) return;
 
   e.preventDefault();
 
-  const amount =
-    e.key === "ArrowDown" ? 120 :
-    e.key === "ArrowUp" ? -120 :
-    e.key === "PageDown" ? 400 :
-    -400;
-
-  reader.contentWindow.scrollBy({
-    top: amount,
-    behavior: "smooth"
-  });
-});
-
-/* AUTO FOCUS */
-pw.focus();
-</script>
-
-</body>
-</html>
+  try {
+    reader.contentWindow.scrollBy({
+      top:
+        e.key =
