@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />       
 <title>Manhyo Reader</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
 
 <style>
 :root{
@@ -154,8 +154,8 @@ button{
   <div class="login-box">
     <div id="title">MANHYO</div>
     <p>Read manhwa & manga in one clean place.</p>
-    <input type="password" id="pw" placeholder="Password" autocomplete="off">
-    <br>
+    <input type="password" id="pw" placeholder="Password" autocomplete="off" />
+    <br />
     <button onclick="login()">Enter</button>
   </div>
 </div>
@@ -188,8 +188,8 @@ button{
           <p>Modern manga platform</p>
         </div>
 
-        <!-- REDDIT EXTENSION -->
-        <div class="card" data-url="https://www.reddit.com">
+        <!-- Updated Reddit card to connect properly -->
+        <div class="card" data-url="https://old.reddit.com">
           <h3>Reddit</h3>
           <p>Communities & discussions</p>
         </div>
@@ -212,15 +212,9 @@ const pw = document.getElementById("pw");
 const overlay = document.getElementById("overlay");
 const reader = document.getElementById("reader");
 
-/* AUTO LOGIN */
-if (localStorage.getItem("logged") === "yes") {
-  showApp();
-}
-
 /* LOGIN */
 function login() {
   if (pw.value === secret) {
-    localStorage.setItem("logged", "yes");
     showApp();
   } else {
     alert("Incorrect password");
@@ -228,7 +222,7 @@ function login() {
 }
 
 /* ENTER KEY SUPPORT */
-pw.addEventListener("keydown", e => {
+pw.addEventListener("keydown", (e) => {
   if (e.key === "Enter") login();
 });
 
@@ -239,7 +233,7 @@ function showApp() {
 }
 
 /* EXTENSIONS → FULLSCREEN */
-document.querySelectorAll(".card").forEach(card => {
+document.querySelectorAll(".card").forEach((card) => {
   card.addEventListener("click", () => {
     overlay.style.display = "block";
     reader.src = card.dataset.url;
