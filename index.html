@@ -3,240 +3,242 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manhyo</title>
+<title>Manhyo Reader</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
-  --accent: #8b5cf6;
-  --glass: rgba(255,255,255,0.08);
+:root{
+  --accent:#8b5cf6;
+  --glass:rgba(255,255,255,.08);
 }
 
-* { box-sizing: border-box; }
+*{box-sizing:border-box}
 
-body {
-  margin: 0;
-  padding: 32px;
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #3b0764, #070707 70%);
-  color: white;
-  font-family: "Courier New", monospace;
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#3b0764,#070707 70%);
+  color:white;
+  font-family:"Courier New",monospace;
 }
 
-h1 {
-  text-align: center;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 4rem;
-  margin-bottom: 32px;
-  text-shadow: 0 0 40px rgba(139,92,246,0.7);
+/* TITLE */
+#title{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:4.2rem;
+  text-align:center;
+  margin-top:40px;
 }
 
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 40px;
+/* SECTIONS */
+.section{display:none}
+.section.active{display:flex}
+
+/* LOGIN */
+#login{
+  height:100vh;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
 }
 
-nav button {
-  background: var(--glass);
-  border: none;
-  color: white;
-  padding: 12px 22px;
-  border-radius: 18px;
-  cursor: pointer;
-  backdrop-filter: blur(14px);
+input{
+  padding:12px;
+  width:200px;
+  border-radius:12px;
+  border:none;
+  text-align:center;
 }
 
-.section { display: none; }
-.section.active { display: block; }
-
-/* EXTENSIONS */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 24px;
+button{
+  padding:12px 22px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--accent),#6d28d9);
+  color:white;
+  font-weight:700;
 }
 
-.card {
-  background: var(--glass);
-  backdrop-filter: blur(18px);
-  padding: 22px;
-  border-radius: 22px;
-  cursor: pointer;
-  transition: 0.25s;
+/* MAIN */
+#main{
+  padding:30px;
+  gap:30px;
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 30px 80px rgba(139,92,246,0.4);
+/* LEFT */
+#left{
+  flex:1;
 }
 
-.card h3 {
-  font-family: "Space Grotesk", sans-serif;
-  margin: 0 0 6px;
+/* RIGHT */
+#right{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
 }
 
-.card p {
-  margin: 0;
-  opacity: 0.7;
-  font-size: 14px;
+/* CARDS */
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border-radius:18px;
+  padding:18px;
 }
 
 /* LIBRARY */
-#saveBox {
-  background: var(--glass);
-  padding: 22px;
-  border-radius: 22px;
-  margin-bottom: 36px;
+#library li{
+  cursor:pointer;
+  margin:12px 0;
+  text-decoration:underline;
 }
 
-#saveBox h2 {
-  font-family: "Space Grotesk", sans-serif;
-  margin-top: 0;
+/* FULLSCREEN */
+#overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  z-index:9999;
 }
 
-input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 14px;
-  border: none;
-  background: rgba(255,255,255,0.15);
-  color: white;
-}
-
-.library {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-  gap: 24px;
-}
-
-.libCard {
-  background: var(--glass);
-  border-radius: 22px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.libCard img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.libCard div {
-  padding: 16px;
+#reader{
+  width:100%;
+  height:100%;
+  border:none;
 }
 </style>
 </head>
 
 <body>
 
-<h1>MANHYO</h1>
+<h1 id="title">MANHYO</h1>
 
-<nav>
-  <button onclick="showSection('extensions')">Extensions</button>
-  <button onclick="showSection('library')">Library</button>
-</nav>
+<!-- LOGIN -->
+<div id="login" class="section">
+  <h2>Enter Password</h2>
+  <input id="pw" type="password" placeholder="Password">
+  <button onclick="login()">Enter</button>
+</div>
 
-<!-- EXTENSIONS -->
-<section id="extensions" class="section active">
-  <div class="grid">
-    <div class="card" onclick="openSite('https://asuracomic.net')">
+<!-- MAIN -->
+<div id="main" class="section">
+
+  <!-- LEFT -->
+  <div id="left">
+    <h2>Library</h2>
+    <ul id="library"></ul>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- RIGHT -->
+  <div id="right">
+    <div class="card">
       <h3>AsuraScans</h3>
-      <p>Manhwa reader</p>
+      <button onclick="openSite('AsuraScans','https://asuracomic.net')">Open</button>
     </div>
-
-    <div class="card" onclick="openSite('https://comix.to')">
+    <div class="card">
       <h3>Comix</h3>
-      <p>Clean UI</p>
+      <button onclick="openSite('Comix','https://comix.to')">Open</button>
     </div>
-
-    <div class="card" onclick="openSite('https://ezmanga.org')">
+    <div class="card">
       <h3>Ezmanga</h3>
-      <p>Manga updates</p>
-    </div>
-
-    <div class="card" onclick="openSite('https://utoon.net')">
-      <h3>Utoon</h3>
-      <p>Webtoons</p>
+      <button onclick="openSite('Ezmanga','https://ezmanga.org')">Open</button>
     </div>
   </div>
-</section>
 
-<!-- LIBRARY -->
-<section id="library" class="section">
-  <div id="saveBox">
-    <h2>Save What You’re Reading</h2>
-    <input id="titleInput" placeholder="Title">
-    <input id="chapterInput" placeholder="Chapter">
-    <input id="siteInput" placeholder="Site">
-    <input id="urlInput" placeholder="Reading URL">
-    <input id="imgInput" placeholder="Image URL (optional)">
-    <button onclick="saveEntry()">Save</button>
-  </div>
+</div>
 
-  <div id="libraryGrid" class="library"></div>
-</section>
+<!-- VIEWER -->
+<div id="overlay">
+  <iframe id="reader" allow="fullscreen"></iframe>
+</div>
 
 <script>
-const sections = document.querySelectorAll(".section");
-const libraryGrid = document.getElementById("libraryGrid");
+/* PASSWORDS */
+const passwords = ["D3r5t0n3","Password","incorrect"];
 
-function showSection(id) {
-  sections.forEach(sec => sec.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+const loginEl = document.getElementById("login");
+const mainEl = document.getElementById("main");
+const overlay = document.getElementById("overlay");
+const reader = document.getElementById("reader");
+const libraryEl = document.getElementById("library");
+
+/* AUTO LOGIN */
+if(localStorage.loggedIn){
+  showMain();
+}else{
+  loginEl.classList.add("active");
 }
 
-function openSite(url) {
-  window.open(url, "_blank");
-}
-
-/* Library logic */
-function loadLibrary() {
-  libraryGrid.innerHTML = "";
-  const data = JSON.parse(localStorage.getItem("manhyoLibrary")) || [];
-
-  data.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "libCard";
-    card.innerHTML = `
-      <img src="${item.img || 'https://via.placeholder.com/400x200'}">
-      <div>
-        <strong>${item.title}</strong><br>
-        <small>${item.site} • Chapter ${item.chapter}</small>
-      </div>
-    `;
-    card.onclick = () => window.open(item.url, "_blank");
-    libraryGrid.appendChild(card);
-  });
-}
-
-function saveEntry() {
-  const title = titleInput.value.trim();
-  const chapter = chapterInput.value.trim();
-  const site = siteInput.value.trim();
-  const url = urlInput.value.trim();
-  const img = imgInput.value.trim();
-
-  if (!title || !url) {
-    alert("Title and URL are required");
-    return;
+/* LOGIN */
+function login(){
+  const pw = document.getElementById("pw").value;
+  if(passwords.includes(pw)){
+    localStorage.loggedIn = "true";
+    showMain();
+  }else{
+    alert("Wrong password");
   }
+}
 
-  const data = JSON.parse(localStorage.getItem("manhyoLibrary")) || [];
-  data.unshift({ title, chapter, site, url, img });
-  localStorage.setItem("manhyoLibrary", JSON.stringify(data));
-
-  titleInput.value = chapterInput.value =
-  siteInput.value = urlInput.value = imgInput.value = "";
-
+function showMain(){
+  loginEl.classList.remove("active");
+  mainEl.classList.add("active");
   loadLibrary();
 }
 
-loadLibrary();
+function logout(){
+  localStorage.clear();
+  location.reload();
+}
+
+/* OPEN SITE */
+function openSite(site,url){
+  const title = prompt("Manhwa / Manga name?");
+  if(!title) return;
+
+  const chapter = prompt("Chapter / Episode?");
+  if(!chapter) return;
+
+  saveReading(site,title,chapter,url);
+
+  overlay.style.display="block";
+  reader.src=url;
+  setTimeout(()=>overlay.requestFullscreen(),100);
+}
+
+/* LIBRARY */
+function saveReading(site,title,chapter,url){
+  let lib = JSON.parse(localStorage.library||"[]");
+  lib.push({site,title,chapter,url});
+  localStorage.library = JSON.stringify(lib);
+  loadLibrary();
+}
+
+function loadLibrary(){
+  libraryEl.innerHTML="";
+  let lib = JSON.parse(localStorage.library||"[]");
+
+  lib.forEach(item=>{
+    let li=document.createElement("li");
+    li.textContent =
+      `${item.site} — ${item.title} — ${item.chapter}`;
+    li.onclick=()=>openSite(item.site,item.url);
+    libraryEl.appendChild(li);
+  });
+}
+
+/* ESC EXIT */
+document.addEventListener("fullscreenchange",()=>{
+  if(!document.fullscreenElement){
+    overlay.style.display="none";
+    reader.src="";
+  }
+});
 </script>
 
 </body>
