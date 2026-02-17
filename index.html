@@ -2,108 +2,135 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Manhyo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manhyo Reader</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --accent:#8b5cf6;
-  --glass:rgba(255,255,255,.08);
+:root {
+  --bg:#0b0d12;
+  --card:#121622;
+  --accent:#5da9ff;
+  --text:#eaf0ff;
+  --muted:#9aa4c7;
 }
 
-*{box-sizing:border-box}
-
+*{box-sizing:border-box;font-family:'Space Grotesk',system-ui}
 body{
   margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at top,#3b0764,#070707 70%);
-  color:white;
-  font-family:"Courier New",monospace;
+  background:var(--bg);
+  color:var(--text);
 }
 
-/* CENTER LOGIN */
+/* ---------- LOGIN ---------- */
 #login{
   height:100vh;
   display:flex;
-  flex-direction:column;
-  justify-content:center;
   align-items:center;
-  gap:16px;
+  justify-content:center;
 }
 
-#title{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:4rem;
-}
-
-input{
-  padding:12px;
-  width:200px;
-  border-radius:12px;
-  border:none;
+.login-box{
+  background:var(--card);
+  padding:40px;
+  border-radius:16px;
+  width:320px;
   text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
 }
 
-button{
-  padding:12px 24px;
-  border-radius:14px;
+.login-box h1{
+  margin:0 0 20px;
+  letter-spacing:2px;
+}
+
+.login-box input{
+  width:140px;
+  padding:10px;
+  border-radius:10px;
   border:none;
+  outline:none;
+  text-align:center;
+  font-size:16px;
+}
+
+.login-box button{
+  margin-top:15px;
+  padding:8px 18px;
+  border-radius:10px;
+  border:none;
+  background:var(--accent);
+  color:#000;
   cursor:pointer;
-  background:linear-gradient(135deg,var(--accent),#6d28d9);
-  color:white;
-  font-weight:700;
 }
 
-/* SECTIONS */
-.section{display:none}
-.section.active{display:flex}
-
-/* MAIN */
-#main{
-  padding:30px;
-  gap:30px;
+.error{
+  color:#ff6b6b;
+  margin-top:10px;
+  font-size:14px;
 }
 
-/* LEFT */
-#left{flex:1}
+/* ---------- APP ---------- */
+#app{
+  display:none;
+  height:100vh;
+}
 
-/* RIGHT */
-#right{
+header{
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+main{
+  display:flex;
+  height:calc(100vh - 80px);
+}
+
+.left{
   flex:1;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:20px;
+  padding:30px;
+}
+
+.right{
+  width:320px;
+  background:var(--card);
+  padding:20px;
+  overflow:auto;
 }
 
 .card{
-  background:var(--glass);
-  backdrop-filter:blur(16px);
-  border-radius:18px;
-  padding:18px;
-}
-
-/* LIBRARY */
-#library li{
+  background:#181d2f;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:15px;
   cursor:pointer;
-  margin:10px 0;
-  text-decoration:underline;
 }
 
-/* FULLSCREEN */
-#overlay{
-  display:none;
+.card:hover{
+  outline:2px solid var(--accent);
+}
+
+iframe{
   position:fixed;
   inset:0;
-  background:black;
-  z-index:9999;
-}
-
-#reader{
   width:100%;
   height:100%;
   border:none;
+  display:none;
+  z-index:10;
+}
+
+/* ---------- LIBRARY ---------- */
+#library{
+  display:none;
+}
+
+.lib-item{
+  background:#181d2f;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
 }
 </style>
 </head>
@@ -111,130 +138,127 @@ button{
 <body>
 
 <!-- LOGIN -->
-<div id="login" class="section active">
-  <h1 id="title">MANHYO</h1>
-  <h3 id="stepText">Password 1</h3>
-  <input id="pw" type="password" placeholder="Enter password">
-  <button onclick="checkPassword()">Enter</button>
-</div>
-
-<!-- MAIN -->
-<div id="main" class="section">
-
-  <div id="left">
-    <h2>Library</h2>
-    <ul id="library"></ul>
-    <button onclick="logout()">Logout</button>
+<div id="login">
+  <div class="login-box">
+    <h1>MANHYO</h1>
+    <input id="password" placeholder="password">
+    <br>
+    <button onclick="checkPassword()">Enter</button>
+    <div class="error" id="error"></div>
   </div>
-
-  <div id="right">
-    <div class="card">
-      <h3>AsuraScans</h3>
-      <button onclick="openSite('AsuraScans','https://asuracomic.net')">Open</button>
-    </div>
-    <div class="card">
-      <h3>Comix</h3>
-      <button onclick="openSite('Comix','https://comix.to')">Open</button>
-    </div>
-    <div class="card">
-      <h3>Ezmanga</h3>
-      <button onclick="openSite('Ezmanga','https://ezmanga.org')">Open</button>
-    </div>
-  </div>
-
 </div>
 
-<!-- VIEWER -->
-<div id="overlay">
-  <iframe id="reader" allow="fullscreen"></iframe>
+<!-- APP -->
+<div id="app">
+  <header>
+    <h2>Manhyo Reader</h2>
+    <div>
+      <button onclick="showHome()">Home</button>
+      <button onclick="showLibrary()">Library</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="left" id="home">
+      <h1>Welcome back</h1>
+      <p class="muted">Click an extension to start reading</p>
+    </div>
+
+    <div class="left" id="library">
+      <h1>Your Library</h1>
+      <div id="libraryList"></div>
+    </div>
+
+    <div class="right">
+      <div class="card" onclick="openSite('https://www.roblox.com','Roblox')">
+        <strong>Roblox</strong>
+        <p class="muted">Games</p>
+      </div>
+
+      <div class="card" onclick="openSite('https://asurascans.com','AsuraScans')">
+        <strong>AsuraScans</strong>
+        <p class="muted">Manhwa</p>
+      </div>
+    </div>
+  </main>
 </div>
+
+<iframe id="reader"></iframe>
 
 <script>
-const steps = ["D3r5t0n3","Password","incorrect"];
-let step = 0;
+let tries = 0;
 
-const loginEl = document.getElementById("login");
-const mainEl = document.getElementById("main");
-const stepText = document.getElementById("stepText");
-const pwInput = document.getElementById("pw");
-const libraryEl = document.getElementById("library");
-const overlay = document.getElementById("overlay");
-const reader = document.getElementById("reader");
-
-/* AUTO LOGIN */
-if(localStorage.loggedIn){
-  showMain();
-}
-
-/* PASSWORD FLOW */
 function checkPassword(){
-  if(pwInput.value === steps[step]){
-    step++;
-    pwInput.value = "";
-    if(step === steps.length){
-      localStorage.loggedIn = "true";
-      showMain();
-    }else{
-      stepText.textContent = `Password ${step+1}`;
+  const p = password.value;
+  if(p === "D3r5t0n3" || p === "Password"){
+    localStorage.setItem("logged","yes");
+    login.style.display="none";
+    app.style.display="block";
+  } else {
+    tries++;
+    error.textContent="Incorrect password";
+    if(tries>=3){
+      error.textContent="Locked. Refresh.";
     }
-  }else{
-    alert("Wrong password");
   }
 }
 
-function showMain(){
-  loginEl.classList.remove("active");
-  mainEl.classList.add("active");
-  loadLibrary();
+if(localStorage.getItem("logged")==="yes"){
+  login.style.display="none";
+  app.style.display="block";
 }
 
 function logout(){
-  localStorage.clear();
+  localStorage.removeItem("logged");
   location.reload();
 }
 
-/* OPEN SITE */
-function openSite(site,url){
-  const title = prompt("Manhwa / Manga name?");
-  if(!title) return;
+function openSite(url,name){
+  const title = prompt("What are you reading?");
+  const chapter = prompt("Chapter?");
+  saveLibrary(name,title,chapter);
 
-  const chapter = prompt("Chapter / Episode?");
-  if(!chapter) return;
-
-  saveReading(site,title,chapter,url);
-
-  overlay.style.display="block";
   reader.src=url;
-  setTimeout(()=>overlay.requestFullscreen(),100);
+  reader.style.display="block";
+  document.documentElement.requestFullscreen();
 }
 
-/* LIBRARY */
-function saveReading(site,title,chapter,url){
-  let lib = JSON.parse(localStorage.library||"[]");
-  lib.push({site,title,chapter,url});
-  localStorage.library = JSON.stringify(lib);
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    reader.style.display="none";
+    document.exitFullscreen();
+  }
+});
+
+function saveLibrary(site,title,chapter){
+  let lib = JSON.parse(localStorage.getItem("library")||"[]");
+  lib.push({site,title,chapter,date:new Date().toLocaleString()});
+  localStorage.setItem("library",JSON.stringify(lib));
+}
+
+function showLibrary(){
+  home.style.display="none";
+  library.style.display="block";
   loadLibrary();
 }
 
-function loadLibrary(){
-  libraryEl.innerHTML="";
-  let lib = JSON.parse(localStorage.library||"[]");
-  lib.forEach(item=>{
-    let li=document.createElement("li");
-    li.textContent =
-      `${item.site} — ${item.title} — ${item.chapter}`;
-    li.onclick=()=>openSite(item.site,item.url);
-    libraryEl.appendChild(li);
-  });
+function showHome(){
+  library.style.display="none";
+  home.style.display="block";
 }
 
-/* ESC EXIT */
-document.addEventListener("fullscreenchange",()=>{
-  if(!document.fullscreenElement){
-    overlay.style.display="none";
-    reader.src="";
-  }
-});
+function loadLibrary(){
+  libraryList.innerHTML="";
+  let lib = JSON.parse(localStorage.getItem("library")||"[]");
+  lib.forEach(i=>{
+    libraryList.innerHTML+=`
+      <div class="lib-item">
+        <strong>${i.title}</strong><br>
+        ${i.site} – ${i.chapter}
+      </div>`;
+  });
+}
 </script>
 
 </body>
