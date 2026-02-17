@@ -23,25 +23,19 @@ body{
   font-family:"Courier New",monospace;
 }
 
-/* TITLE */
-#title{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:4.2rem;
-  text-align:center;
-  margin-top:40px;
-}
-
-/* SECTIONS */
-.section{display:none}
-.section.active{display:flex}
-
-/* LOGIN */
+/* CENTER LOGIN */
 #login{
   height:100vh;
+  display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:14px;
+  gap:16px;
+}
+
+#title{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:4rem;
 }
 
 input{
@@ -53,7 +47,7 @@ input{
 }
 
 button{
-  padding:12px 22px;
+  padding:12px 24px;
   border-radius:14px;
   border:none;
   cursor:pointer;
@@ -62,6 +56,10 @@ button{
   font-weight:700;
 }
 
+/* SECTIONS */
+.section{display:none}
+.section.active{display:flex}
+
 /* MAIN */
 #main{
   padding:30px;
@@ -69,9 +67,7 @@ button{
 }
 
 /* LEFT */
-#left{
-  flex:1;
-}
+#left{flex:1}
 
 /* RIGHT */
 #right{
@@ -81,7 +77,6 @@ button{
   gap:20px;
 }
 
-/* CARDS */
 .card{
   background:var(--glass);
   backdrop-filter:blur(16px);
@@ -92,7 +87,7 @@ button{
 /* LIBRARY */
 #library li{
   cursor:pointer;
-  margin:12px 0;
+  margin:10px 0;
   text-decoration:underline;
 }
 
@@ -115,26 +110,23 @@ button{
 
 <body>
 
-<h1 id="title">MANHYO</h1>
-
 <!-- LOGIN -->
-<div id="login" class="section">
-  <h2>Enter Password</h2>
-  <input id="pw" type="password" placeholder="Password">
-  <button onclick="login()">Enter</button>
+<div id="login" class="section active">
+  <h1 id="title">MANHYO</h1>
+  <h3 id="stepText">Password 1</h3>
+  <input id="pw" type="password" placeholder="Enter password">
+  <button onclick="checkPassword()">Enter</button>
 </div>
 
 <!-- MAIN -->
 <div id="main" class="section">
 
-  <!-- LEFT -->
   <div id="left">
     <h2>Library</h2>
     <ul id="library"></ul>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- RIGHT -->
   <div id="right">
     <div class="card">
       <h3>AsuraScans</h3>
@@ -158,28 +150,33 @@ button{
 </div>
 
 <script>
-/* PASSWORDS */
-const passwords = ["D3r5t0n3","Password","incorrect"];
+const steps = ["D3r5t0n3","Password","incorrect"];
+let step = 0;
 
 const loginEl = document.getElementById("login");
 const mainEl = document.getElementById("main");
+const stepText = document.getElementById("stepText");
+const pwInput = document.getElementById("pw");
+const libraryEl = document.getElementById("library");
 const overlay = document.getElementById("overlay");
 const reader = document.getElementById("reader");
-const libraryEl = document.getElementById("library");
 
 /* AUTO LOGIN */
 if(localStorage.loggedIn){
   showMain();
-}else{
-  loginEl.classList.add("active");
 }
 
-/* LOGIN */
-function login(){
-  const pw = document.getElementById("pw").value;
-  if(passwords.includes(pw)){
-    localStorage.loggedIn = "true";
-    showMain();
+/* PASSWORD FLOW */
+function checkPassword(){
+  if(pwInput.value === steps[step]){
+    step++;
+    pwInput.value = "";
+    if(step === steps.length){
+      localStorage.loggedIn = "true";
+      showMain();
+    }else{
+      stepText.textContent = `Password ${step+1}`;
+    }
   }else{
     alert("Wrong password");
   }
@@ -222,7 +219,6 @@ function saveReading(site,title,chapter,url){
 function loadLibrary(){
   libraryEl.innerHTML="";
   let lib = JSON.parse(localStorage.library||"[]");
-
   lib.forEach(item=>{
     let li=document.createElement("li");
     li.textContent =
