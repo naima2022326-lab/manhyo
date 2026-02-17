@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />       
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhyo Reader</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -154,8 +154,8 @@ button{
   <div class="login-box">
     <div id="title">MANHYO</div>
     <p>Read manhwa & manga in one clean place.</p>
-    <input type="password" id="pw" placeholder="Password" autocomplete="off" />
-    <br />
+    <input type="password" id="pw" placeholder="Password" autocomplete="off">
+    <br>
     <button onclick="login()">Enter</button>
   </div>
 </div>
@@ -188,10 +188,9 @@ button{
           <p>Modern manga platform</p>
         </div>
 
-        <!-- Shell Shockers in iframe -->
-        <div class="card" data-url="https://shellshock.io">
-          <h3>Shell Shockers</h3>
-          <p>Multiplayer online egg shooter game</p>
+        <div class="card" data-url="https://old.reddit.com">
+          <h3>Reddit</h3>
+          <p>Communities & discussions</p>
         </div>
       </div>
     </div>
@@ -222,7 +221,7 @@ function login() {
 }
 
 /* ENTER KEY SUPPORT */
-pw.addEventListener("keydown", (e) => {
+pw.addEventListener("keydown", e => {
   if (e.key === "Enter") login();
 });
 
@@ -232,25 +231,15 @@ function showApp() {
   appEl.style.display = "block";
 }
 
-/* EXTENSIONS → FULLSCREEN */
-document.querySelectorAll(".card").forEach((card) => {
+/* OPEN EXTENSIONS */
+document.querySelectorAll(".card").forEach(card => {
   card.addEventListener("click", () => {
-    const url = card.dataset.url;
-    if (url.includes("shellshock.io")) {
-      // Load Shell Shockers inside iframe
-      overlay.style.display = "block";
-      reader.src = url;
-      setTimeout(() => {
-        overlay.requestFullscreen?.();
-      }, 50);
-    } else {
-      // Load other sites in iframe
-      overlay.style.display = "block";
-      reader.src = url;
-      setTimeout(() => {
-        overlay.requestFullscreen?.();
-      }, 50);
-    }
+    overlay.style.display = "block";
+    reader.src = card.dataset.url;
+
+    setTimeout(() => {
+      overlay.requestFullscreen?.();
+    }, 50);
   });
 });
 
@@ -260,6 +249,27 @@ document.addEventListener("fullscreenchange", () => {
     overlay.style.display = "none";
     reader.src = "";
   }
+});
+
+/* 🔥 SMOOTH SCROLL FIX */
+window.addEventListener("keydown", e => {
+  if (!document.fullscreenElement) return;
+
+  const keys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp"];
+  if (!keys.includes(e.key)) return;
+
+  e.preventDefault();
+
+  const amount =
+    e.key === "ArrowDown" ? 120 :
+    e.key === "ArrowUp" ? -120 :
+    e.key === "PageDown" ? 400 :
+    -400;
+
+  reader.contentWindow.scrollBy({
+    top: amount,
+    behavior: "smooth"
+  });
 });
 
 /* AUTO FOCUS */
