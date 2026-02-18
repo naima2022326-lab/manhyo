@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Manhyo Reader</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -16,98 +15,54 @@
   --glass:rgba(255,255,255,.08);
 }
 
-/* Reset and base styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Space Grotesk", sans-serif;
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Space Grotesk",sans-serif;}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,var(--purple2),var(--dark) 70%);
+  color:white;
+  font-family:"Courier New",monospace;
 }
 
-/* Body styles */
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at top, var(--purple2), var(--dark) 70%);
-  color: white;
-  font-family: "Courier New", monospace;
-}
-
-/* ---------------- LOGIN ---------------- */
+/* LOGIN */
 #login{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
 }
 
-.login-box{
-  text-align:center;
-}
+.login-box{text-align:center;}
 
 #title{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:4.8rem;
-  letter-spacing:6px;
-  margin-bottom:10px;
+  font-size:4.8rem;letter-spacing:6px;margin-bottom:10px;
   text-shadow:0 0 40px rgba(139,92,246,.8);
 }
 
-.login-box p{
-  opacity:.7;
-  margin-bottom:30px;
-}
+.login-box p{opacity:.7;margin-bottom:30px;}
 
 input{
-  padding:12px;
-  width:180px;
-  border-radius:14px;
-  border:none;
-  background:rgba(255,255,255,.15);
-  color:white;
-  text-align:center;
+  padding:12px;width:180px;border-radius:14px;border:none;
+  background:rgba(255,255,255,.15);color:white;text-align:center;
 }
 
 button{
-  margin-top:16px;
-  padding:12px 20px;
-  border-radius:16px;
-  border:none;
-  cursor:pointer;
+  margin-top:16px;padding:12px 20px;border-radius:16px;
+  border:none;cursor:pointer;
   background:linear-gradient(135deg,var(--purple),var(--purple2));
-  color:white;
-  font-weight:700;
+  color:white;font-weight:700;
   box-shadow:0 0 30px rgba(139,92,246,.6);
 }
 
-/* ---------------- APP ---------------- */
-#app{
-  display:none;
-  padding:50px;
-}
+/* APP */
+#app{display:none;padding:50px;}
 
 .layout{
-  display:grid;
-  grid-template-columns:1fr 1.2fr;
-  gap:60px;
-  max-width:1300px;
-  margin:auto;
+  display:grid;grid-template-columns:1fr 1.2fr;
+  gap:60px;max-width:1300px;margin:auto;
 }
 
-.left h1{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:4rem;
-  letter-spacing:5px;
-}
+.left h1{font-size:4rem;letter-spacing:5px;}
+.left p{opacity:.8;line-height:1.7;max-width:480px;}
 
-.left p{
-  opacity:.8;
-  line-height:1.7;
-  max-width:480px;
-}
-
-/* ---------------- EXTENSIONS ---------------- */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -117,10 +72,8 @@ button{
 .card{
   background:var(--glass);
   backdrop-filter:blur(18px);
-  border-radius:22px;
-  padding:22px;
-  cursor:pointer;
-  transition:.25s;
+  border-radius:22px;padding:22px;
+  cursor:pointer;transition:.25s;
   box-shadow:0 25px 50px rgba(0,0,0,.6);
 }
 
@@ -129,26 +82,70 @@ button{
   box-shadow:0 30px 80px rgba(139,92,246,.35);
 }
 
-.card h3{
-  font-family:"Space Grotesk",sans-serif;
-  margin-bottom:6px;
-}
-
-/* ---------------- IFRAME ---------------- */
 #overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:black;
-  z-index:9999;
+  display:none;position:fixed;inset:0;
+  background:black;z-index:9999;
 }
 
-#reader{
-  width:100%;
-  height:100%;
-  border:none;
-  overscroll-behavior: contain;
-  scroll-behavior: smooth;
+#reader{width:100%;height:100%;border:none;}
+
+/* ========== MANHYO CINEMATIC ========== */
+
+#cinematic{
+  position:fixed;inset:0;background:black;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+#cinematic h1{
+  color:#8b5cf6;
+  font-size:5rem;
+  letter-spacing:8px;
+  text-shadow:0 0 60px #8b5cf6;
+}
+
+#cinematic-text{
+  margin-top:25px;
+  font-family:"Courier New",monospace;
+  color:#c4b5fd;
+}
+
+.stars,.planets,.earth{
+  position:absolute;inset:0;opacity:0;
+}
+
+.stars{
+  background:
+    radial-gradient(1px 1px at 20% 30%, white, transparent),
+    radial-gradient(1px 1px at 70% 80%, white, transparent),
+    radial-gradient(1px 1px at 40% 60%, white, transparent),
+    radial-gradient(1px 1px at 90% 20%, white, transparent);
+}
+
+.planets{
+  background:
+    radial-gradient(circle at 30% 40%, #a855f7 0 12px, transparent 13px),
+    radial-gradient(circle at 70% 60%, #60a5fa 0 16px, transparent 17px);
+}
+
+.earth{
+  background:
+    radial-gradient(circle at 50% 50%, #22d3ee 0 40px, #0f172a 41px);
+}
+
+#cinematic button{
+  opacity:0;
+  margin-top:60px;
+  padding:14px 40px;
+  background:transparent;
+  border:2px solid #8b5cf6;
+  color:white;
+  cursor:pointer;
+  letter-spacing:4px;
 }
 </style>
 </head>
@@ -159,10 +156,20 @@ button{
   <div class="login-box">
     <div id="title">MANHYO</div>
     <p>Read manhwa & manga in one clean place.</p>
-    <input type="password" id="pw" placeholder="Password" autocomplete="off" />
+    <input type="password" id="pw" placeholder="Password" />
     <br />
     <button onclick="login()">Enter</button>
   </div>
+</div>
+
+<!-- CINEMATIC -->
+<div id="cinematic">
+  <div class="stars"></div>
+  <div class="planets"></div>
+  <div class="earth"></div>
+  <h1 id="cinematic-title">MANHYO</h1>
+  <div id="cinematic-text"></div>
+  <button id="cinematicEnter">ENTER</button>
 </div>
 
 <!-- APP -->
@@ -170,109 +177,74 @@ button{
   <div class="layout">
     <div class="left">
       <h1>MANHYO</h1>
-      <p>
-        Manhyo is a private reader hub that lets you open your favorite
-        sites in fullscreen without distractions.
-      </p>
+      <p>Manhyo is a private reader hub that lets you open your favorite sites in fullscreen without distractions.</p>
     </div>
     <div class="right">
       <div class="grid">
-        <div class="card" data-url="https://asuracomic.net">
-          <h3>AsuraScans</h3>
-          <p>Action & fantasy manhwa</p>
-        </div>
-        <div class="card" data-url="https://ezmanga.org">
-          <h3>Ezmanga</h3>
-          <p>Manga & manhwa reader</p>
-        </div>
-        <div class="card" data-url="https://comix.to">
-          <h3>Comix</h3>
-          <p>Modern manga platform</p>
-        </div>
+        <div class="card" data-url="https://asuracomic.net"><h3>AsuraScans</h3></div>
+        <div class="card" data-url="https://ezmanga.org"><h3>Ezmanga</h3></div>
+        <div class="card" data-url="https://comix.to"><h3>Comix</h3></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- IFRAME -->
-<div id="overlay">
-  <iframe id="reader" allow="fullscreen"></iframe>
-</div>
-
 <script>
-const secret = "D3r5t0n3";
+const secret="D3r5t0n3";
+const loginEl=document.getElementById("login");
+const appEl=document.getElementById("app");
+const pw=document.getElementById("pw");
 
-const loginEl = document.getElementById("login");
-const appEl = document.getElementById("app");
-const pw = document.getElementById("pw");
-const overlay = document.getElementById("overlay");
-const reader = document.getElementById("reader");
-
-/* LOGIN */
-function login() {
-  if (pw.value === secret) {
-    showApp();
-  } else {
-    alert("Incorrect password");
-  }
+function login(){
+  if(pw.value!==secret){alert("Incorrect password");return;}
+  loginEl.style.display="none";
+  startCinematic();
 }
 
-/* ENTER KEY SUPPORT */
-pw.addEventListener("keydown", e => {
-  if (e.key === "Enter") login();
-});
+function startCinematic(){
+  const c=document.getElementById("cinematic");
+  const title=document.getElementById("cinematic-title");
+  const text=document.getElementById("cinematic-text");
+  const stars=document.querySelector(".stars");
+  const planets=document.querySelector(".planets");
+  const earth=document.querySelector(".earth");
+  const btn=document.getElementById("cinematicEnter");
 
-/* SHOW APP */
-function showApp() {
-  loginEl.style.display = "none";
-  appEl.style.display = "block";
+  c.style.display="flex";
+
+  let i=title.textContent.length;
+  const del=setInterval(()=>{
+    title.textContent=title.textContent.slice(0,--i);
+    if(i<=0)clearInterval(del);
+  },80);
+
+  setTimeout(()=>{
+    const msg="get ready to start emerging yourselves";
+    let j=0;
+    const type=setInterval(()=>{
+      text.textContent+=msg[j++];
+      if(j===msg.length){
+        clearInterval(type);
+        setTimeout(()=>{
+          const d=setInterval(()=>{
+            text.textContent=text.textContent.slice(0,-1);
+            if(!text.textContent)clearInterval(d);
+          },40);
+        },1200);
+      }
+    },60);
+  },1200);
+
+  setTimeout(()=>stars.style.opacity=1,3000);
+  setTimeout(()=>planets.style.opacity=1,4200);
+  setTimeout(()=>earth.style.opacity=1,5600);
+  setTimeout(()=>btn.style.opacity=1,7000);
+
+  btn.onclick=()=>{
+    c.style.display="none";
+    appEl.style.display="block";
+  };
 }
-
-/* OPEN EXTENSIONS */
-document.querySelectorAll(".card").forEach(card => {
-  card.addEventListener("click", () => {
-    overlay.style.display = "block";
-    reader.src = card.dataset.url;
-
-    setTimeout(() => {
-      overlay.requestFullscreen?.();
-    }, 50);
-  });
-});
-
-/* EXIT FULLSCREEN */
-document.addEventListener("fullscreenchange", () => {
-  if (!document.fullscreenElement) {
-    overlay.style.display = "none";
-    reader.src = "";
-  }
-});
-
-/* 🔧 SCROLL FIX */
-window.addEventListener("keydown", e => {
-  if (!document.fullscreenElement) return;
-
-  const url = reader.src || "";
-
-  // ✅ Do NOT interfere with Comix.to
-  if (url.includes("comix.to")) return;
-
-  const keys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp"];
-  if (!keys.includes(e.key)) return;
-
-  e.preventDefault();
-
-  try {
-    reader.contentWindow.scrollBy({
-      top:
-        e.key === "ArrowDown" ? 120 :
-        e.key === "ArrowUp" ? -120 :
-        e.key === "PageDown" ? 500 :
-        -500,
-      behavior: "smooth"
-    });
-  } catch {}
-});
 </script>
 
 </body>
