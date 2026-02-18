@@ -89,67 +89,77 @@ button{
 
 #reader{width:100%;height:100%;border:none;}
 
-/* ========== MANHYO CINEMATIC ========== */
-
-#cinematic{
-  position:fixed;inset:0;background:black;
+/* ===== INTRO CINEMATIC ===== */
+#intro{
+  position:fixed;inset:0;
+  background:black;
   z-index:10000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
   overflow:hidden;
 }
 
-#cinematic h1{
-  color:#8b5cf6;
+#space{
+  position:absolute;inset:0;display:block;
+}
+
+.intro-text{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  z-index:5;
+}
+
+#intro-title{
+  font-family:"Space Grotesk",sans-serif;
   font-size:5rem;
   letter-spacing:8px;
-  text-shadow:0 0 60px #8b5cf6;
+  color:var(--purple);
+  text-shadow:0 0 50px rgba(139,92,246,.9);
+  animation:fadeOut 1.8s ease forwards;
+  animation-delay:0.5s;
 }
 
-#cinematic-text{
-  margin-top:25px;
+#intro-sub{
   font-family:"Courier New",monospace;
-  color:#c4b5fd;
-}
-
-.stars,.planets,.earth{
-  position:absolute;inset:0;opacity:0;
-}
-
-.stars{
-  background:
-    radial-gradient(1px 1px at 20% 30%, white, transparent),
-    radial-gradient(1px 1px at 70% 80%, white, transparent),
-    radial-gradient(1px 1px at 40% 60%, white, transparent),
-    radial-gradient(1px 1px at 90% 20%, white, transparent);
-}
-
-.planets{
-  background:
-    radial-gradient(circle at 30% 40%, #a855f7 0 12px, transparent 13px),
-    radial-gradient(circle at 70% 60%, #60a5fa 0 16px, transparent 17px);
-}
-
-.earth{
-  background:
-    radial-gradient(circle at 50% 50%, #22d3ee 0 40px, #0f172a 41px);
-}
-
-#cinematic button{
+  font-size:1.2rem;
+  color:white;
   opacity:0;
-  margin-top:60px;
+  animation:fadeInOut 3s ease forwards;
+  animation-delay:2.5s;
+}
+
+#enterBtn{
+  opacity:0;
+  margin-top:40px;
   padding:14px 40px;
   background:transparent;
   border:2px solid #8b5cf6;
-  color:white;
+  color:#8b5cf6;
   cursor:pointer;
-  letter-spacing:4px;
+}
+
+@keyframes fadeOut{
+  to{opacity:0; letter-spacing:18px;}
+}
+
+@keyframes fadeInOut{
+  30%{opacity:1;}
+  100%{opacity:0;}
 }
 </style>
 </head>
 <body>
+
+<!-- CINEMATIC INTRO -->
+<div id="intro">
+  <canvas id="space"></canvas>
+
+  <div class="intro-text">
+    <div id="intro-title">MANHYO</div>
+    <div id="intro-sub">get ready to start<br>emerging yourselves</div>
+    <button id="enterBtn">ENTER</button>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div id="login">
@@ -160,16 +170,6 @@ button{
     <br />
     <button onclick="login()">Enter</button>
   </div>
-</div>
-
-<!-- CINEMATIC -->
-<div id="cinematic">
-  <div class="stars"></div>
-  <div class="planets"></div>
-  <div class="earth"></div>
-  <h1 id="cinematic-title">MANHYO</h1>
-  <div id="cinematic-text"></div>
-  <button id="cinematicEnter">ENTER</button>
 </div>
 
 <!-- APP -->
@@ -189,62 +189,132 @@ button{
   </div>
 </div>
 
+<!-- IFRAME -->
+<div id="overlay">
+  <iframe id="reader" allow="fullscreen"></iframe>
+</div>
+
 <script>
 const secret="D3r5t0n3";
 const loginEl=document.getElementById("login");
 const appEl=document.getElementById("app");
 const pw=document.getElementById("pw");
 
+// LOGIN
 function login(){
   if(pw.value!==secret){alert("Incorrect password");return;}
   loginEl.style.display="none";
-  startCinematic();
+  startIntro();
 }
 
-function startCinematic(){
-  const c=document.getElementById("cinematic");
-  const title=document.getElementById("cinematic-title");
-  const text=document.getElementById("cinematic-text");
-  const stars=document.querySelector(".stars");
-  const planets=document.querySelector(".planets");
-  const earth=document.querySelector(".earth");
-  const btn=document.getElementById("cinematicEnter");
+// INTRO CINEMATIC
+const canvas=document.getElementById("space");
+const ctx=canvas.getContext("2d");
+const enterBtn=document.getElementById("enterBtn");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
-  c.style.display="flex";
+// STARS
+let stars=Array.from({length:250},()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  r:Math.random()*1.5+0.5,
+  alpha:Math.random(),
+  twinkle:Math.random()*0.02+0.005
+}));
 
-  let i=title.textContent.length;
-  const del=setInterval(()=>{
-    title.textContent=title.textContent.slice(0,--i);
-    if(i<=0)clearInterval(del);
-  },80);
+// PLANETS
+let planets=[
+  {x:canvas.width*0.3,y:canvas.height*0.4,r:40,color:"#a855f7",appear:false},
+  {x:canvas.width*0.7,y:canvas.height*0.6,r:50,color:"#60a5fa",appear:false}
+];
 
-  setTimeout(()=>{
-    const msg="get ready to start emerging yourselves";
-    let j=0;
-    const type=setInterval(()=>{
-      text.textContent+=msg[j++];
-      if(j===msg.length){
-        clearInterval(type);
-        setTimeout(()=>{
-          const d=setInterval(()=>{
-            text.textContent=text.textContent.slice(0,-1);
-            if(!text.textContent)clearInterval(d);
-          },40);
-        },1200);
-      }
-    },60);
-  },1200);
+// EARTH
+let earth={x:canvas.width*0.5,y:canvas.height*0.5,r:60,color:"#22d3ee",appear:false};
 
-  setTimeout(()=>stars.style.opacity=1,3000);
-  setTimeout(()=>planets.style.opacity=1,4200);
-  setTimeout(()=>earth.style.opacity=1,5600);
-  setTimeout(()=>btn.style.opacity=1,7000);
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  btn.onclick=()=>{
-    c.style.display="none";
-    appEl.style.display="block";
+  // STARS first
+  stars.forEach(s=>{
+    s.alpha+=s.twinkle;
+    if(s.alpha<=0||s.alpha>=1) s.twinkle*=-1;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${s.alpha})`;
+    ctx.shadowBlur=6;
+    ctx.shadowColor="#9b5cff";
+    ctx.fill();
+  });
+
+  // PLANETS
+  planets.forEach(p=>{if(p.appear){
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color;ctx.shadowBlur=15;ctx.shadowColor=p.color;ctx.fill();
+  }});
+
+  // EARTH
+  if(earth.appear){
+    ctx.beginPath();
+    ctx.arc(earth.x,earth.y,earth.r,0,Math.PI*2);
+    ctx.fillStyle=earth.color;
+    ctx.shadowBlur=20;
+    ctx.shadowColor=earth.color;
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+function startIntro(){
+  draw();
+  // MANHYO title first
+  setTimeout(()=>stars.forEach(s=>{}),2500);
+  setTimeout(()=>planets.forEach(p=>p.appear=true),3500);
+  setTimeout(()=>earth.appear=true,6500);
+  setTimeout(()=>enterBtn.style.opacity=1,9000);
+
+  enterBtn.onclick=()=>{
+    document.getElementById("intro").style.display="none";
+    loginEl.style.display="flex"; // Show password page
   };
 }
+
+// ENTER key for password
+pw.addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+
+/* OPEN EXTENSIONS */
+document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("click",()=>{
+    document.getElementById("overlay").style.display="block";
+    document.getElementById("reader").src=card.dataset.url;
+    setTimeout(()=>document.getElementById("overlay").requestFullscreen?.(),50);
+  });
+});
+
+/* EXIT FULLSCREEN */
+document.addEventListener("fullscreenchange",()=>{
+  if(!document.fullscreenElement){
+    document.getElementById("overlay").style.display="none";
+    document.getElementById("reader").src="";
+  }
+});
+
+/* SCROLL FIX */
+window.addEventListener("keydown",e=>{
+  if(!document.fullscreenElement) return;
+  const url=document.getElementById("reader").src||"";
+  if(url.includes("comix.to")) return;
+  const keys=["ArrowDown","ArrowUp","PageDown","PageUp"];
+  if(!keys.includes(e.key)) return;
+  e.preventDefault();
+  try{
+    document.getElementById("reader").contentWindow.scrollBy({
+      top:e.key==="ArrowDown"?120:e.key==="ArrowUp"?-120:e.key==="PageDown"?500:-500,
+      behavior:"smooth"
+    });
+  }catch{}
+});
 </script>
 
 </body>
