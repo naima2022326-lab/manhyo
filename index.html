@@ -147,10 +147,9 @@ button{
   width:100%;
   height:100%;
   border:none;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
 }
-
-/* Additional styles from the first CSS snippet, if any, can be added here if needed */
-
 </style>
 </head>
 <body>
@@ -249,22 +248,15 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-/* 🔧 PAGE-FLIP FIX (for all sites) */
+/* 🔧 SCROLL FIX */
 window.addEventListener("keydown", e => {
   if (!document.fullscreenElement) return;
 
   const url = reader.src || "";
 
-  // Block page flipping for specific sites if needed
-  if (url.includes("comix.to")) {
-    const blockKeys = ["ArrowDown","ArrowUp","PageDown","PageUp"," "];
-    if (blockKeys.includes(e.key)) {
-      e.preventDefault();
-    }
-    return;
-  }
+  // ✅ Do NOT interfere with Comix.to
+  if (url.includes("comix.to")) return;
 
-  // Smooth scroll for other sites
   const keys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp"];
   if (!keys.includes(e.key)) return;
 
@@ -275,13 +267,11 @@ window.addEventListener("keydown", e => {
       top:
         e.key === "ArrowDown" ? 120 :
         e.key === "ArrowUp" ? -120 :
-        e.key === "PageDown" ? 450 :
-        -450,
+        e.key === "PageDown" ? 500 :
+        -500,
       behavior: "smooth"
     });
-  } catch (err) {
-    // fallback if cross-origin or error
-  }
+  } catch {}
 });
 </script>
 
