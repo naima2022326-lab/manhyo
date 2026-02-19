@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Manhyo Reader</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --purple:#8b5cf6;
+  --purple2:#6d28d9;
+  --dark:#050507;
+  --glass:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Space Grotesk",sans-serif;}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,var(--purple2),var(--dark) 70%);
+  color:white;
+  font-family:"Courier New",monospace;
+}
+
+/* LOGIN */
+#login{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.login-box{text-align:center;}
+
+#title{
+  font-size:4.8rem;letter-spacing:6px;margin-bottom:10px;
+  text-shadow:0 0 40px rgba(139,92,246,.8);
+}
+
+.login-box p{opacity:.7;margin-bottom:30px;}
+
+input{
+  padding:12px;width:180px;border-radius:14px;border:none;
+  background:rgba(255,255,255,.15);color:white;text-align:center;
+}
+
+button{
+  margin-top:16px;padding:12px 20px;border-radius:16px;
+  border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:white;font-weight:700;
+  box-shadow:0 0 30px rgba(139,92,246,.6);
+}
+
+/* APP */
+#app{display:none;padding:50px;}
+
+.layout{
+  display:grid;grid-template-columns:1fr 1.2fr;
+  gap:60px;max-width:1300px;margin:auto;
+}
+
+.left h1{font-size:4rem;letter-spacing:5px;}
+.left p{opacity:.8;line-height:1.7;max-width:480px;}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  border-radius:22px;padding:22px;
+  cursor:pointer;transition:.25s;
+  box-shadow:0 25px 50px rgba(0,0,0,.6);
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 30px 80px rgba(139,92,246,.35);
+}
+
+#overlay{
+  display:none;position:fixed;inset:0;
+  background:black;z-index:9999;
+}
+
+#reader{width:100%;height:100%;border:none;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div id="title">MANHYO</div>
+    <p>Read manhwa & manga in one clean place.</p>
+    <input type="password" id="pw" placeholder="Password" />
+    <br />
+    <button onclick="login()">Enter</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="layout">
+    <div class="left">
+      <h1>MANHYO</h1>
+      <p>Manhyo is a private reader hub that lets you open your favorite sites in fullscreen without distractions.</p>
+    </div>
+    <div class="right">
+      <div class="grid">
+        <div class="card" data-url="https://asuracomic.net"><h3>AsuraScans</h3></div>
+        <div class="card" data-url="https://ezmanga.org"><h3>Ezmanga</h3></div>
+        <div class="card" data-url="https://comix.to"><h3>Comix</h3></div>
+        <div class="card" data-url="https://miruro.com"><h3>Miruro</h3></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IFRAME -->
+<div id="overlay">
+  <iframe id="reader" allow="fullscreen"></iframe>
+</div>
+
+<script>
+const secret="D3r5t0n3";
+const loginEl=document.getElementById("login");
+const appEl=document.getElementById("app");
+const pw=document.getElementById("pw");
+
+function login(){
+  if(pw.value!==secret){alert("Incorrect password");return;}
+  loginEl.style.display="none";
+  appEl.style.display="block";
+}
+
+pw.addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+
+/* OPEN EXTENSIONS */
+document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("click",()=>{
+    const overlay=document.getElementById("overlay");
+    const reader=document.getElementById("reader");
+    overlay.style.display="block";
+    reader.src=card.dataset.url;
+    setTimeout(()=>overlay.requestFullscreen?.(),50);
+  });
+});
+
+/* EXIT FULLSCREEN */
+document.addEventListener("fullscreenchange",()=>{
+  if(!document.fullscreenElement){
+    document.getElementById("overlay").style.display="none";
+    document.getElementById("reader").src="";
+  }
+});
+
+/* SCROLL FIX */
+window.addEventListener("keydown",e=>{
+  if(!document.fullscreenElement) return;
+  const url=document.getElementById("reader").src||"";
+  if(url.includes("comix.to")) return;
+  const keys=["ArrowDown","ArrowUp","PageDown","PageUp"];
+  if(!keys.includes(e.key)) return;
+  e.preventDefault();
+  try{
+    document.getElementById("reader").contentWindow.scrollBy({
+      top:e.key==="ArrowDown"?120:e.key==="ArrowUp"?-120:e.key==="PageDown"?500:-500,
+      behavior:"smooth"
+    });
+  }catch{}
+});
+</script>
+
+</body>
+</html>
