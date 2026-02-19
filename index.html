@@ -68,7 +68,7 @@ button{
   gap:22px;
 }
 
-/* === UPDATED CARD STYLE (ONLY CHANGE) === */
+/* CARD STYLE */
 .card{
   background:rgba(0,0,0,.45);
   backdrop-filter:blur(16px);
@@ -101,7 +101,6 @@ button{
   opacity:.75;
   line-height:1.4;
 }
-/* === END CHANGE === */
 
 #overlay{
   display:none;position:fixed;inset:0;
@@ -133,6 +132,7 @@ button{
     </div>
     <div class="right">
       <div class="grid">
+
         <div class="card" data-url="https://asuracomic.net">
           <h3>AsuraScans</h3>
           <p>Fast updates, popular manhwa, clean reader.</p>
@@ -148,10 +148,12 @@ button{
           <p>Huge catalog with vertical scroll support.</p>
         </div>
 
+        <!-- REPLACED MIRURO -->
         <div class="card" data-url="https://aniwatch.to">
-          <h3>Aniwatch</h3>
-          <p>Anime hub — opens episodes in a new tab.</p>
+          <h3>AniWatch</h3>
+          <p>▶️ Embedded anime player</p>
         </div>
+
       </div>
     </div>
   </div>
@@ -179,14 +181,10 @@ pw.addEventListener("keydown",e=>{if(e.key==="Enter")login();});
 /* OPEN EXTENSIONS */
 document.querySelectorAll(".card").forEach(card=>{
   card.addEventListener("click",()=>{
-    const url=card.dataset.url;
-    if(url.includes("miruro")){
-      alert("Miruro opens videos in a new tab due to site restrictions.");
-    }
     const overlay=document.getElementById("overlay");
     const reader=document.getElementById("reader");
     overlay.style.display="block";
-    reader.src=url;
+    reader.src=card.dataset.url;
     setTimeout(()=>overlay.requestFullscreen?.(),50);
   });
 });
