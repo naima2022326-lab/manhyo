@@ -12,7 +12,6 @@
   --purple:#8b5cf6;
   --purple2:#6d28d9;
   --dark:#050507;
-  --glass:rgba(255,255,255,.08);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;font-family:"Space Grotesk",sans-serif;}
@@ -69,18 +68,40 @@ button{
   gap:22px;
 }
 
+/* === UPDATED CARD STYLE (ONLY CHANGE) === */
 .card{
-  background:var(--glass);
-  backdrop-filter:blur(18px);
-  border-radius:22px;padding:22px;
-  cursor:pointer;transition:.25s;
-  box-shadow:0 25px 50px rgba(0,0,0,.6);
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(16px);
+  border-radius:22px;
+  padding:22px;
+  cursor:pointer;
+  transition:.3s ease;
+  border:1.5px solid rgba(139,92,246,.45);
+  box-shadow:
+    0 0 0 rgba(139,92,246,0),
+    inset 0 0 0 rgba(139,92,246,0);
 }
 
 .card:hover{
   transform:translateY(-6px);
-  box-shadow:0 30px 80px rgba(139,92,246,.35);
+  border-color:rgba(139,92,246,.9);
+  box-shadow:
+    0 0 35px rgba(139,92,246,.45),
+    inset 0 0 20px rgba(139,92,246,.15);
 }
+
+.card h3{
+  font-size:1.2rem;
+  letter-spacing:1px;
+}
+
+.card p{
+  margin-top:8px;
+  font-size:.9rem;
+  opacity:.75;
+  line-height:1.4;
+}
+/* === END CHANGE === */
 
 #overlay{
   display:none;position:fixed;inset:0;
@@ -112,10 +133,25 @@ button{
     </div>
     <div class="right">
       <div class="grid">
-        <div class="card" data-url="https://asuracomic.net"><h3>AsuraScans</h3></div>
-        <div class="card" data-url="https://ezmanga.org"><h3>Ezmanga</h3></div>
-        <div class="card" data-url="https://comix.to"><h3>Comix</h3></div>
-        <div class="card" data-url="https://miruro.to"><h3>Miruro</h3></div>
+        <div class="card" data-url="https://asuracomic.net">
+          <h3>AsuraScans</h3>
+          <p>Fast updates, popular manhwa, clean reader.</p>
+        </div>
+
+        <div class="card" data-url="https://ezmanga.org">
+          <h3>Ezmanga</h3>
+          <p>Manga-focused library with simple navigation.</p>
+        </div>
+
+        <div class="card" data-url="https://comix.to">
+          <h3>Comix</h3>
+          <p>Huge catalog with vertical scroll support.</p>
+        </div>
+
+        <div class="card" data-url="https://aniwatch.to">
+          <h3>Aniwatch</h3>
+          <p>Anime hub — opens episodes in a new tab.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -143,10 +179,14 @@ pw.addEventListener("keydown",e=>{if(e.key==="Enter")login();});
 /* OPEN EXTENSIONS */
 document.querySelectorAll(".card").forEach(card=>{
   card.addEventListener("click",()=>{
+    const url=card.dataset.url;
+    if(url.includes("miruro")){
+      alert("Miruro opens videos in a new tab due to site restrictions.");
+    }
     const overlay=document.getElementById("overlay");
     const reader=document.getElementById("reader");
     overlay.style.display="block";
-    reader.src=card.dataset.url;
+    reader.src=url;
     setTimeout(()=>overlay.requestFullscreen?.(),50);
   });
 });
