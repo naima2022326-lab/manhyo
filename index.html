@@ -88,78 +88,9 @@ button{
 }
 
 #reader{width:100%;height:100%;border:none;}
-
-/* ===== INTRO CINEMATIC ===== */
-#intro{
-  position:fixed;inset:0;
-  background:black;
-  z-index:10000;
-  overflow:hidden;
-}
-
-#space{
-  position:absolute;inset:0;display:block;
-}
-
-.intro-text{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  z-index:5;
-}
-
-#intro-title{
-  font-family:"Space Grotesk",sans-serif;
-  font-size:5rem;
-  letter-spacing:8px;
-  color:var(--purple);
-  text-shadow:0 0 50px rgba(139,92,246,.9);
-  animation:fadeOut 1.8s ease forwards;
-  animation-delay:0.5s;
-}
-
-#intro-sub{
-  font-family:"Courier New",monospace;
-  font-size:1.2rem;
-  color:white;
-  opacity:0;
-  animation:fadeInOut 3s ease forwards;
-  animation-delay:2.5s;
-}
-
-#enterBtn{
-  opacity:0;
-  margin-top:40px;
-  padding:14px 40px;
-  background:transparent;
-  border:2px solid #8b5cf6;
-  color:#8b5cf6;
-  cursor:pointer;
-}
-
-@keyframes fadeOut{
-  to{opacity:0; letter-spacing:18px;}
-}
-
-@keyframes fadeInOut{
-  30%{opacity:1;}
-  100%{opacity:0;}
-}
 </style>
 </head>
 <body>
-
-<!-- CINEMATIC INTRO -->
-<div id="intro">
-  <canvas id="space"></canvas>
-
-  <div class="intro-text">
-    <div id="intro-title">MANHYO</div>
-    <div id="intro-sub">get ready to start<br>emerging yourselves</div>
-    <button id="enterBtn">ENTER</button>
-  </div>
-</div>
 
 <!-- LOGIN -->
 <div id="login">
@@ -184,6 +115,7 @@ button{
         <div class="card" data-url="https://asuracomic.net"><h3>AsuraScans</h3></div>
         <div class="card" data-url="https://ezmanga.org"><h3>Ezmanga</h3></div>
         <div class="card" data-url="https://comix.to"><h3>Comix</h3></div>
+        <div class="card" data-url="https://miruro.com"><h3>Miruro</h3></div>
       </div>
     </div>
   </div>
@@ -200,95 +132,22 @@ const loginEl=document.getElementById("login");
 const appEl=document.getElementById("app");
 const pw=document.getElementById("pw");
 
-// LOGIN
 function login(){
   if(pw.value!==secret){alert("Incorrect password");return;}
   loginEl.style.display="none";
-  startIntro();
+  appEl.style.display="block";
 }
 
-// INTRO CINEMATIC
-const canvas=document.getElementById("space");
-const ctx=canvas.getContext("2d");
-const enterBtn=document.getElementById("enterBtn");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-// STARS
-let stars=Array.from({length:250},()=>({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  r:Math.random()*1.5+0.5,
-  alpha:Math.random(),
-  twinkle:Math.random()*0.02+0.005
-}));
-
-// PLANETS
-let planets=[
-  {x:canvas.width*0.3,y:canvas.height*0.4,r:40,color:"#a855f7",appear:false},
-  {x:canvas.width*0.7,y:canvas.height*0.6,r:50,color:"#60a5fa",appear:false}
-];
-
-// EARTH
-let earth={x:canvas.width*0.5,y:canvas.height*0.5,r:60,color:"#22d3ee",appear:false};
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // STARS first
-  stars.forEach(s=>{
-    s.alpha+=s.twinkle;
-    if(s.alpha<=0||s.alpha>=1) s.twinkle*=-1;
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${s.alpha})`;
-    ctx.shadowBlur=6;
-    ctx.shadowColor="#9b5cff";
-    ctx.fill();
-  });
-
-  // PLANETS
-  planets.forEach(p=>{if(p.appear){
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.color;ctx.shadowBlur=15;ctx.shadowColor=p.color;ctx.fill();
-  }});
-
-  // EARTH
-  if(earth.appear){
-    ctx.beginPath();
-    ctx.arc(earth.x,earth.y,earth.r,0,Math.PI*2);
-    ctx.fillStyle=earth.color;
-    ctx.shadowBlur=20;
-    ctx.shadowColor=earth.color;
-    ctx.fill();
-  }
-
-  requestAnimationFrame(draw);
-}
-
-function startIntro(){
-  draw();
-  // MANHYO title first
-  setTimeout(()=>stars.forEach(s=>{}),2500);
-  setTimeout(()=>planets.forEach(p=>p.appear=true),3500);
-  setTimeout(()=>earth.appear=true,6500);
-  setTimeout(()=>enterBtn.style.opacity=1,9000);
-
-  enterBtn.onclick=()=>{
-    document.getElementById("intro").style.display="none";
-    loginEl.style.display="flex"; // Show password page
-  };
-}
-
-// ENTER key for password
 pw.addEventListener("keydown",e=>{if(e.key==="Enter")login();});
 
 /* OPEN EXTENSIONS */
 document.querySelectorAll(".card").forEach(card=>{
   card.addEventListener("click",()=>{
-    document.getElementById("overlay").style.display="block";
-    document.getElementById("reader").src=card.dataset.url;
-    setTimeout(()=>document.getElementById("overlay").requestFullscreen?.(),50);
+    const overlay=document.getElementById("overlay");
+    const reader=document.getElementById("reader");
+    overlay.style.display="block";
+    reader.src=card.dataset.url;
+    setTimeout(()=>overlay.requestFullscreen?.(),50);
   });
 });
 
